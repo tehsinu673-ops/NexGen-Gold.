@@ -377,59 +377,41 @@ body::before{content:'';position:fixed;top:-30%;left:-20%;width:80%;height:80%;b
 .support-card p.sub{font-size:12px;color:var(--text3);margin-bottom:14px;}
 .support-card textarea.inp{min-height:90px;resize:vertical;padding:14px;font-family:inherit;}
 
+/* ===== ENHANCEMENTS: OTP & Live Profit Meter ===== */
+.otp-wrap{display:flex;gap:8px;justify-content:center;margin:16px 0 18px;direction:ltr;}
+.otp-inp{width:42px;height:52px;text-align:center;font-size:22px;font-weight:800;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:12px;outline:none;transition:border-color .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.otp-inp:focus{border-color:rgba(255,208,96,0.6);box-shadow:0 0 0 4px var(--gold-dim);background:var(--surface3);}
+.phone-prefix{position:absolute;left:44px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:700;color:var(--text);pointer-events:none;z-index:1;}
+.phone-inp{padding-left:78px !important;}
+.otp-info{background:var(--gold-dim);border:1px solid rgba(255,208,96,0.2);border-radius:var(--r-xs);padding:11px 14px;margin-bottom:14px;font-size:12px;color:var(--g1);text-align:center;line-height:1.6;}
+.resend-row{text-align:center;font-size:12px;color:var(--text3);margin-bottom:14px;}
+.resend-row .link-gold{font-size:12px;}
+
+/* Live Meter Card */
+.meter-card{background:linear-gradient(145deg,#0A1B0E 0%,#040D07 50%,#07070F 100%);border:1px solid rgba(0,232,132,0.22);border-radius:24px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
+.meter-card::before{content:'';position:absolute;top:-90px;left:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,132,0.12) 0%,transparent 65%);pointer-events:none;}
+.meter-label{font-size:10px;font-weight:700;color:rgba(0,232,132,0.55);letter-spacing:3px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.meter-label .ml-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.2s ease infinite;}
+.meter-amt{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,8vw,42px);font-weight:800;color:var(--green);margin:10px 0 4px;line-height:1.15;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,#00E884,#5EFFAA,#00E884);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 4s linear infinite;}
+.meter-rate{font-size:11px;color:rgba(0,232,132,0.5);margin-bottom:18px;font-weight:600;}
+.meter-rate b{color:var(--green);}
+.meter-collect{width:100%;padding:15px;border:none;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;background:linear-gradient(135deg,#00E884,#00B26A);color:#000;box-shadow:0 4px 22px rgba(0,232,132,0.32),inset 0 1px 0 rgba(255,255,255,0.3);transition:transform .15s;letter-spacing:0.5px;}
+.meter-collect:active{transform:scale(0.97);}
+.meter-collect:disabled{opacity:0.5;background:var(--surface3);color:var(--text3);box-shadow:none;cursor:default;}
+
+/* Calculator extra row */
+.calc-tax-row{background:rgba(255,77,106,0.04);border:1px solid rgba(255,77,106,0.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:11px;}
+.calc-tax-row .ctr-l{color:var(--text3);font-weight:600;}
+.calc-tax-row .ctr-v{color:var(--red);font-weight:800;}
+.calc-tax-row.cap{background:rgba(0,232,132,0.04);border-color:rgba(0,232,132,0.15);}
+.calc-tax-row.cap .ctr-v{color:var(--green);}
+
 /* ===== ENHANCEMENTS: Daily Bonus Toast ===== */
 #bonusToast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-200px);background:linear-gradient(135deg,#140E00,#0A0700);border:1px solid rgba(255,208,96,0.4);border-radius:20px;padding:16px 22px;display:flex;align-items:center;gap:14px;z-index:9000;box-shadow:0 10px 40px rgba(255,208,96,0.25);transition:transform .5s cubic-bezier(.16,1,.3,1);}
 #bonusToast.show{transform:translateX(-50%) translateY(0);}
 #bonusToast .bt-icon{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;font-size:22px;color:#000;animation:coinBounce 1.2s ease-in-out infinite;}
 #bonusToast .bt-t{font-size:11px;color:var(--g1);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
 #bonusToast .bt-a{font-size:18px;font-weight:800;color:var(--green);}
-
-
-/* ===== V2: Gold Visuals ===== */
-.gold-visual{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:13px;background:radial-gradient(circle at 30% 25%,#FFF3B0 0%,#FFD060 25%,#F5A800 60%,#9C6300 100%);box-shadow:inset 0 1px 2px rgba(255,255,255,0.6),inset 0 -2px 4px rgba(0,0,0,0.3),0 4px 14px rgba(255,176,0,0.4);position:relative;overflow:hidden;flex-shrink:0;}
-.gold-visual::before{content:'';position:absolute;top:8%;left:12%;width:35%;height:25%;background:linear-gradient(180deg,rgba(255,255,255,0.8),transparent);border-radius:50%;filter:blur(3px);}
-.gold-visual svg{position:relative;z-index:1;}
-.gold-visual.lg{width:60px;height:60px;border-radius:16px;}
-
-/* ===== V2: Leaderboard ===== */
-.lb-hero{background:linear-gradient(145deg,#1A1100,#0E0A00,#07070F);border:1px solid rgba(255,208,96,0.3);border-radius:24px;padding:26px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;}
-.lb-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,208,96,0.18) 0%,transparent 65%);}
-.lb-hero h1{font-family:'Syne',sans-serif;font-size:clamp(22px,6vw,30px);font-weight:800;color:var(--g1);margin-bottom:6px;position:relative;z-index:1;}
-.lb-hero p{font-size:12px;color:var(--text2);position:relative;z-index:1;}
-.lb-row{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:transform .2s;}
-.lb-row.you{border-color:rgba(255,208,96,0.5);background:linear-gradient(135deg,var(--surface),rgba(255,208,96,0.06));box-shadow:0 0 24px rgba(255,208,96,0.15);}
-.lb-row.gold{background:linear-gradient(135deg,rgba(255,208,96,0.12),var(--surface));border-color:rgba(255,208,96,0.45);}
-.lb-row.silver{background:linear-gradient(135deg,rgba(203,213,225,0.08),var(--surface));border-color:rgba(203,213,225,0.3);}
-.lb-row.bronze{background:linear-gradient(135deg,rgba(205,127,50,0.08),var(--surface));border-color:rgba(205,127,50,0.3);}
-.lb-rank{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);}
-.lb-rank.gold{background:linear-gradient(135deg,#FFD060,#F5A800);color:#000;border:none;box-shadow:0 0 14px rgba(255,208,96,0.5);}
-.lb-rank.silver{background:linear-gradient(135deg,#E2E8F0,#94A3B8);color:#000;border:none;}
-.lb-rank.bronze{background:linear-gradient(135deg,#D9913A,#A0651A);color:#fff;border:none;}
-.lb-rank i{font-size:18px;}
-.lb-info{flex:1;min-width:0;}
-.lb-name{font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lb-meta{font-size:10px;color:var(--text3);margin-top:3px;}
-.lb-amt{text-align:right;flex-shrink:0;}
-.lb-amt-v{font-weight:800;font-size:14px;color:var(--g1);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;}
-.lb-amt-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
-.lb-loading{text-align:center;padding:40px;color:var(--text3);font-size:13px;}
-
-/* ===== V2: Milestone Bonus Card ===== */
-.milestone-card{background:linear-gradient(145deg,#1A0F00,#0F0700,#07070F);border:2px solid rgba(255,208,96,0.4);border-radius:24px;padding:24px;margin-bottom:16px;position:relative;overflow:hidden;animation:goldGlow 3s ease infinite;}
-.milestone-card::before{content:'';position:absolute;top:-100px;right:-100px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,208,96,0.18) 0%,transparent 65%);}
-.milestone-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;margin:0 auto 12px;position:relative;z-index:1;animation:coinBounce 1.6s ease-in-out infinite;}
-.milestone-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;text-align:center;color:var(--g1);position:relative;z-index:1;}
-.milestone-card p.ms-sub{font-size:12px;color:var(--text2);text-align:center;margin-top:4px;margin-bottom:14px;position:relative;z-index:1;}
-.ms-amt{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;text-align:center;background:linear-gradient(135deg,var(--g3),var(--g1),var(--g4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;position:relative;z-index:1;}
-.ms-btn{display:block;width:100%;padding:16px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 6px 28px rgba(255,208,96,0.4);position:relative;z-index:1;}
-.ms-btn:active{transform:scale(0.97);}
-.ms-btn:disabled{opacity:0.55;cursor:not-allowed;}
-.ms-status{background:rgba(255,208,96,0.1);border:1px solid rgba(255,208,96,0.25);border-radius:50px;padding:12px;text-align:center;font-size:12px;font-weight:700;color:var(--g1);position:relative;z-index:1;}
-
-/* ===== V2: Language Toggle ===== */
-.lang-toggle{position:fixed;top:calc(env(safe-area-inset-top) + 70px);right:14px;z-index:100;background:var(--surface3);border:1px solid var(--border2);border-radius:50px;padding:6px 4px;display:flex;gap:2px;backdrop-filter:blur(20px);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
-.lang-toggle button{background:none;border:none;color:var(--text3);padding:5px 11px;border-radius:50px;font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px;transition:all .2s;}
-.lang-toggle button.on{background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;}
 
 </style>
 </head>
@@ -596,28 +578,46 @@ body::before{content:'';position:fixed;top:-30%;left:-20%;width:80%;height:80%;b
       <div class="auth-badge"><i class="fas fa-shield-halved" style="font-size:9px;"></i> Premium Investment Platform</div>
     </div>
     <div id="loginBox" class="auth-card">
-      <h2 style="font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Syne',sans-serif;">Khush Amdeed! ðŸ‘‹</h2>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:24px;">Apne account mein login karein</p>
-      <div class="inp-wrap"><i class="fas fa-envelope inp-icon"></i><input type="email" id="lEmail" placeholder="Email Address" class="inp"></div>
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Syne',sans-serif;">Khush Amdeed! 👋</h2>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:24px;">Mobile number aur password se login karein</p>
+      <div class="inp-wrap"><i class="fas fa-mobile-alt inp-icon"></i><span class="phone-prefix">+92</span><input type="tel" id="lPhone" placeholder="3XXXXXXXXX" class="inp phone-inp" maxlength="10" inputmode="numeric"></div>
       <div class="inp-wrap"><i class="fas fa-lock inp-icon"></i><input type="password" id="lPass" placeholder="Password" class="inp"></div>
       <div id="lErr" class="errbox"></div>
       <button id="lBtn" onclick="handleLogin()" class="btn-gold" style="margin-top:6px;margin-bottom:20px;">LOGIN</button>
       <p style="text-align:center;font-size:14px;color:var(--text2);">Naya account chahiye? <span class="link-gold" onclick="showReg()">Register karein</span></p>
     </div>
     <div id="regBox" class="auth-card" style="display:none;">
-      <h2 style="font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Syne',sans-serif;">Account Banayein âœ¨</h2>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:24px;">Bilkul free â€” abhi join karein!</p>
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Syne',sans-serif;">Account Banayein ✨</h2>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:24px;">Mobile verify karein — abhi join karein!</p>
       <div class="inp-wrap"><i class="fas fa-user inp-icon"></i><input type="text" id="rName" placeholder="Aapka Poora Naam" class="inp"></div>
-      <div class="inp-wrap"><i class="fas fa-envelope inp-icon"></i><input type="email" id="rEmail" placeholder="Email Address" class="inp"></div>
+      <div class="inp-wrap"><i class="fas fa-mobile-alt inp-icon"></i><span class="phone-prefix">+92</span><input type="tel" id="rPhone" placeholder="3XXXXXXXXX" class="inp phone-inp" maxlength="10" inputmode="numeric"></div>
       <div class="inp-wrap"><i class="fas fa-lock inp-icon"></i><input type="password" id="rPass" placeholder="Password (Min 6 characters)" class="inp"></div>
-      <input type="hidden" id="rRef" value="">
+      <div class="inp-wrap"><i class="fas fa-user-plus inp-icon"></i><input type="text" id="rRef" placeholder="Referral Code (Optional)" class="inp"></div>
       <div id="refBadge" style="display:none;background:rgba(255,208,96,0.08);border:1px solid rgba(255,208,96,0.25);border-radius:var(--r-xs);padding:10px 16px;margin-bottom:12px;font-size:12px;color:var(--g1);">
         <i class="fas fa-user-plus" style="margin-right:7px;"></i><span id="refBadgeText">Referral link se aa rahe hain</span>
       </div>
       <div id="rErr" class="errbox"></div>
-      <button id="rBtn" onclick="handleReg()" class="btn-gold" style="margin-top:6px;margin-bottom:20px;">REGISTER KAREIN</button>
+      <button id="rBtn" onclick="handleReg()" class="btn-gold" style="margin-top:6px;margin-bottom:20px;">SEND OTP & REGISTER</button>
       <p style="text-align:center;font-size:14px;color:var(--text2);">Pehle se account hai? <span class="link-gold" onclick="showLogin()">Login karein</span></p>
     </div>
+    <div id="otpBox" class="auth-card" style="display:none;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Syne',sans-serif;">Verify Karein 🔐</h2>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px;">6-digit code aapke mobile pe bheja gaya</p>
+      <div class="otp-info">📱 OTP bheja gaya: <b id="otpPhoneShown">+92...</b></div>
+      <div class="otp-wrap">
+        <input type="tel" maxlength="1" inputmode="numeric" class="otp-inp" data-i="0">
+        <input type="tel" maxlength="1" inputmode="numeric" class="otp-inp" data-i="1">
+        <input type="tel" maxlength="1" inputmode="numeric" class="otp-inp" data-i="2">
+        <input type="tel" maxlength="1" inputmode="numeric" class="otp-inp" data-i="3">
+        <input type="tel" maxlength="1" inputmode="numeric" class="otp-inp" data-i="4">
+        <input type="tel" maxlength="1" inputmode="numeric" class="otp-inp" data-i="5">
+      </div>
+      <div id="oErr" class="errbox"></div>
+      <button id="oBtn" onclick="verifyOtp()" class="btn-gold" style="margin-top:6px;margin-bottom:14px;">VERIFY & ACTIVATE ACCOUNT</button>
+      <div class="resend-row">Code nahi mila? <span class="link-gold" onclick="resendOtp()" id="resendLink">Resend OTP</span></div>
+      <p style="text-align:center;font-size:14px;color:var(--text2);"><span class="link-gold" onclick="cancelOtp()">← Wapas jayein</span></p>
+    </div>
+    <div id="recaptcha-container" style="display:flex;justify-content:center;margin-top:14px;"></div>
   </div>
 </div>
 
@@ -639,20 +639,13 @@ body::before{content:'';position:fixed;top:-30%;left:-20%;width:80%;height:80%;b
   <div id="mainContent"></div>
   <div id="bnav">
     <div class="bnav-inner">
-      <button class="nb on" id="nb-home" onclick="nav('home')"><i class="fas fa-home"></i><span data-i18n="navHome">Home</span><div class="nb-pip"></div></button>
-      <button class="nb" id="nb-work" onclick="nav('work')"><i class="fas fa-gem"></i><span data-i18n="navWork">Work</span><div class="nb-pip"></div></button>
-      <div class="nb-center"><button class="fab" id="nb-leaderboard" onclick="nav('leaderboard')" title="Leaderboard"><i class="fas fa-trophy"></i></button></div>
-      <button class="nb" id="nb-team" onclick="nav('team')"><i class="fas fa-users"></i><span data-i18n="navTeam">Team</span><div class="nb-pip"></div></button>
-      <button class="nb" id="nb-me" onclick="nav('me')"><i class="fas fa-user-circle"></i><span data-i18n="navMe">Me</span><div class="nb-pip"></div></button>
+      <button class="nb on" id="nb-home" onclick="nav('home')"><i class="fas fa-home"></i><span>Home</span><div class="nb-pip"></div></button>
+      <button class="nb" id="nb-work" onclick="nav('work')"><i class="fas fa-gem"></i><span>Work</span><div class="nb-pip"></div></button>
+      <div class="nb-center"><button class="fab" onclick="nav('invest')"><i class="fas fa-plus"></i></button></div>
+      <button class="nb" id="nb-team" onclick="nav('team')"><i class="fas fa-users"></i><span>Team</span><div class="nb-pip"></div></button>
+      <button class="nb" id="nb-me" onclick="nav('me')"><i class="fas fa-user-circle"></i><span>Me</span><div class="nb-pip"></div></button>
     </div>
   </div>
-</div>
-
-
-<!-- LANGUAGE TOGGLE -->
-<div class="lang-toggle" id="langToggle" style="display:none;">
-  <button id="langEn" class="on" onclick="setLang('en')">EN</button>
-  <button id="langUr" onclick="setLang('ur')">اردو</button>
 </div>
 
 <!-- DAILY BONUS TOAST -->
@@ -717,10 +710,10 @@ function launchParticles(){
 <!-- MAIN APP LOGIC -->
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from"https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence,RecaptchaVerifier,signInWithPhoneNumber,linkWithCredential,EmailAuthProvider,deleteUser}from"https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 import{getDatabase,ref,set,get,child,update}from"https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-const FB=initializeApp({apiKey:"AIzaSyD88cYTn-A78Jb4yxFD-L472hCtGq3J430",authDomain:"sra-821aa.firebaseapp.com",databaseURL:"https://sra-821aa-default-rtdb.firebaseio.com",projectId:"sra-821aa",storageBucket:"sra-821aa.firebasestorage.app",messagingSenderId:"417677137399",appId:"1:417677137399:web:384a0af2d9060e4de98af2"});
+const FB=initializeApp({apiKey:"AIzaSyAWlcywark7VYDUNQYrPWdDrKIRSavKPww",authDomain:"nexgen-gold-a16fc.firebaseapp.com",databaseURL:"https://nexgen-gold-a16fc-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"nexgen-gold-a16fc",storageBucket:"nexgen-gold-a16fc.firebasestorage.app",messagingSenderId:"96387506595",appId:"1:96387506595:web:1a87cd01d4b476fd85ba16"});
 const auth=getAuth(FB);const db=getDatabase(FB);
 setPersistence(auth,browserLocalPersistence).catch(()=>{});
 const COMM={l1:0.08,l2:0.03,l3:0.01};
@@ -761,6 +754,9 @@ const MIN_DEPOSIT = 600;
 const MIN_WITHDRAW = 500;
 const PLAN_TAGS = {2:{cls:'hot',txt:'🔥 Hot'},5:{cls:'popular',txt:'⭐ Most Popular'},7:{cls:'best',txt:'💎 Best Seller'}};
 let tickerI=null, bannerI=null, planCdI=null, ltCurrentTab='deposits';
+let meterI=null;
+const ACTIVATION_FEE=0.10;
+const DAILY_RATE=0.025;
 
 // --- Coin clinking sound (WebAudio, no asset) ---
 let _audioCtx=null;
@@ -847,14 +843,18 @@ function startBannerSlider(){
   bannerI=setInterval(()=>{idx=(idx+1)%BANNERS.length;show(idx);},4000);
 }
 
-// --- Profit Calculator ---
+// --- Profit Calculator (10/90 Rule) ---
 function updateCalc(v){
   const amt=parseInt(v)||MIN_DEPOSIT;
-  const daily=Math.floor(amt*0.025);
+  const fee=Math.floor(amt*ACTIVATION_FEE);
+  const cap=amt-fee;
+  const daily=Math.floor(cap*DAILY_RATE);
   const monthly=daily*30;
   const total60=daily*PLAN_DAYS;
-  const a=g('calcAmt'),d=g('calcDaily'),m=g('calcMonthly'),t=g('calcTotal');
+  const a=g('calcAmt'),d=g('calcDaily'),m=g('calcMonthly'),t=g('calcTotal'),f=g('calcFee'),cp=g('calcCap');
   if(a) a.innerText='Rs '+fmt(amt);
+  if(f) f.innerText='-Rs '+fmt(fee);
+  if(cp) cp.innerText='Rs '+fmt(cap);
   if(d) d.innerText='Rs '+fmt(daily);
   if(m) m.innerText='Rs '+fmt(monthly);
   if(t) t.innerText='Rs '+fmt(total60);
@@ -925,7 +925,7 @@ async function submitSupportTicket(){
   try{
     const tid='t_'+Date.now();
     await set(ref(db,'supportTickets/'+tid),{
-      uid:UID,name:U.name||'',email:U.email||'',
+      uid:UID,name:U.name||'',phone:U.phone||'',email:U.email||'',
       subject:subj,message:msg,status:'Open',
       createdAt:Date.now(),
       date:new Date().toLocaleDateString('en-PK')
@@ -935,282 +935,188 @@ async function submitSupportTicket(){
   }catch(e){showToast("❌ Ticket bhejne mein masla — dobara try karein");}
 }
 
-Object.assign(window,{updateCalc,switchLtTab,submitSupportTicket});
 
-
-// ============================================================
-// ===== V2 ENHANCEMENTS: Gold images, Leaderboard, Milestone, i18n
-// ============================================================
-
-const MILESTONE_TARGET = 1000000;   // 10 Lakh team deposit
-const MILESTONE_BONUS  = 20000;     // Rs 20,000 bonus
-
-// ---------- Gold visual SVG (replaces FA icons in plan cards) ----------
-function goldVisual(planId, size){
-  const sz = size==='lg' ? 36 : 28;
-  const cls = size==='lg' ? 'gold-visual lg' : 'gold-visual';
-  // Choose visual by plan tier
-  const p = (typeof PLANS!=='undefined') ? PLANS.find(x=>x.id===planId) : null;
-  const price = p ? (p.price||p.invest||0) : 0;
-  let svg = '';
-  if(price < 5000){
-    // Gold coin
-    svg = `<svg width="${sz}" height="${sz}" viewBox="0 0 40 40">
-      <defs><radialGradient id="gc${planId}" cx="35%" cy="30%"><stop offset="0%" stop-color="#FFF3B0"/><stop offset="50%" stop-color="#FFD060"/><stop offset="100%" stop-color="#9C6300"/></radialGradient></defs>
-      <circle cx="20" cy="20" r="17" fill="url(#gc${planId})" stroke="#7A4D00" stroke-width="0.8"/>
-      <text x="20" y="26" text-anchor="middle" font-family="Syne,sans-serif" font-size="14" font-weight="900" fill="#7A4D00">$</text>
-    </svg>`;
-  } else if(price < 50000){
-    // Single gold bar
-    svg = `<svg width="${sz}" height="${sz}" viewBox="0 0 40 40">
-      <defs><linearGradient id="gb${planId}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF3B0"/><stop offset="50%" stop-color="#FFD060"/><stop offset="100%" stop-color="#9C6300"/></linearGradient></defs>
-      <polygon points="6,28 34,28 36,16 4,16" fill="url(#gb${planId})" stroke="#7A4D00" stroke-width="0.8"/>
-      <line x1="10" y1="20" x2="30" y2="20" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
-      <text x="20" y="25" text-anchor="middle" font-family="Syne,sans-serif" font-size="6" font-weight="900" fill="#7A4D00">999.9</text>
-    </svg>`;
-  } else if(price < 300000){
-    // Stack of 2 gold bars
-    svg = `<svg width="${sz}" height="${sz}" viewBox="0 0 40 40">
-      <defs><linearGradient id="gb2${planId}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF3B0"/><stop offset="50%" stop-color="#FFD060"/><stop offset="100%" stop-color="#9C6300"/></linearGradient></defs>
-      <polygon points="6,32 34,32 36,22 4,22" fill="url(#gb2${planId})" stroke="#7A4D00" stroke-width="0.7"/>
-      <polygon points="9,21 31,21 33,12 7,12" fill="url(#gb2${planId})" stroke="#7A4D00" stroke-width="0.7"/>
-      <line x1="10" y1="27" x2="30" y2="27" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
-    </svg>`;
-  } else {
-    // Pyramid of 3 + crown
-    svg = `<svg width="${sz}" height="${sz}" viewBox="0 0 40 40">
-      <defs><linearGradient id="gb3${planId}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF3B0"/><stop offset="50%" stop-color="#FFD060"/><stop offset="100%" stop-color="#9C6300"/></linearGradient></defs>
-      <polygon points="2,36 38,36 39,28 1,28" fill="url(#gb3${planId})" stroke="#7A4D00" stroke-width="0.6"/>
-      <polygon points="6,27 22,27 23,20 5,20" fill="url(#gb3${planId})" stroke="#7A4D00" stroke-width="0.6"/>
-      <polygon points="22,27 38,27 37,20 23,20" fill="url(#gb3${planId})" stroke="#7A4D00" stroke-width="0.6"/>
-      <polygon points="14,18 28,18 27,11 15,11" fill="url(#gb3${planId})" stroke="#7A4D00" stroke-width="0.6"/>
-      <path d="M16 10 L18 6 L21 9 L24 6 L26 10 Z" fill="#FFD060" stroke="#7A4D00" stroke-width="0.5"/>
-    </svg>`;
-  }
-  return `<span class="${cls}">${svg}</span>`;
-}
-
-// ---------- Mask name for privacy ----------
-function maskName(name){
-  if(!name) return 'User';
-  const parts = name.trim().split(/\s+/);
-  if(parts.length === 1) return parts[0].substring(0, Math.min(6, parts[0].length)) + '***';
-  return parts[0] + ' ' + (parts[1][0]||'') + '***';
-}
-
-// ---------- Leaderboard ----------
-async function renderLeaderboard(c){
-  c.innerHTML = `
-    <div class="lb-hero">
-      <h1><i class="fas fa-trophy" style="margin-right:8px;"></i>${t('lbTitle')}</h1>
-      <p>${t('lbSub')}</p>
-    </div>
-    <div id="lbBody" class="lb-loading"><i class="fas fa-spinner fa-spin" style="font-size:20px;color:var(--g1);"></i><br><br>${t('lbLoading')}</div>
-  `;
-  try{
-    const snap = await get(ref(db, 'users'));
-    if(!snap.exists()){ g('lbBody').innerHTML = '<div class="lb-loading">'+t('lbEmpty')+'</div>'; return; }
-    const all = snap.val();
-    const list = [];
-    for(const uid in all){
-      const u = all[uid] || {};
-      list.push({
-        uid,
-        name: u.name || (u.email||'User').split('@')[0],
-        teamDeposit: u.totalTeamDeposit || 0,
-        teamCount: u.teamCount || 0
-      });
-    }
-    list.sort((a,b)=> b.teamDeposit - a.teamDeposit);
-    const top = list.slice(0, 100);
-    const myRank = list.findIndex(x => x.uid === UID) + 1;
-
-    const rows = top.map((u, i) => {
-      const rank = i + 1;
-      let cls = '', rankCls = '', rankHtml = String(rank);
-      if(rank===1){cls='gold';rankCls='gold';rankHtml='<i class="fas fa-medal"></i>';}
-      else if(rank===2){cls='silver';rankCls='silver';rankHtml='<i class="fas fa-medal"></i>';}
-      else if(rank===3){cls='bronze';rankCls='bronze';rankHtml='<i class="fas fa-medal"></i>';}
-      const youCls = u.uid === UID ? ' you' : '';
-      return `<div class="lb-row ${cls}${youCls}">
-        <div class="lb-rank ${rankCls}">${rankHtml}</div>
-        <div class="lb-info">
-          <div class="lb-name">${maskName(u.name)}${u.uid===UID?' <span style="color:var(--g1);font-size:10px;">('+t('lbYou')+')</span>':''}</div>
-          <div class="lb-meta"><i class="fas fa-users" style="font-size:9px;"></i> ${u.teamCount} ${t('lbRefers')}</div>
-        </div>
-        <div class="lb-amt">
-          <div class="lb-amt-v">Rs ${fmt(u.teamDeposit)}</div>
-          <div class="lb-amt-l">${t('lbTeamDeposit')}</div>
-        </div>
-      </div>`;
-    }).join('');
-
-    const myRankHtml = (myRank > 0 && myRank > 100)
-      ? `<div style="background:var(--gold-dim);border:1px solid rgba(255,208,96,0.25);border-radius:14px;padding:14px;text-align:center;margin-bottom:14px;font-size:13px;color:var(--g1);font-weight:700;">${t('lbYourRank')}: <b>#${myRank}</b></div>`
-      : '';
-
-    g('lbBody').className = '';
-    g('lbBody').innerHTML = myRankHtml + (rows || `<div class="lb-loading">${t('lbEmpty')}</div>`);
-  }catch(e){
-    console.error(e);
-    g('lbBody').innerHTML = '<div class="lb-loading">'+t('lbError')+'</div>';
-  }
-}
-
-// ---------- Milestone Bonus ----------
-async function claimMilestoneBonus(){
-  if((U.totalTeamDeposit||0) < MILESTONE_TARGET){
-    return showToast(t('msNotEligible'));
-  }
-  if(U.milestoneBonusStatus === 'Pending'){
-    return showToast(t('msAlreadyPending'));
-  }
-  if(U.milestoneBonusStatus === 'Approved' || U.milestoneBonusStatus === 'Paid'){
-    return showToast(t('msAlreadyClaimed'));
-  }
-  try{
-    const reqId = 'br_' + Date.now();
-    await set(ref(db, 'bonusRequests/' + reqId), {
-      uid: UID,
-      name: U.name || '',
-      email: U.email || '',
-      teamDeposit: U.totalTeamDeposit || 0,
-      bonusAmount: MILESTONE_BONUS,
-      status: 'Pending',
-      createdAt: Date.now(),
-      date: new Date().toLocaleDateString('en-PK')
-    });
-    U.milestoneBonusStatus = 'Pending';
-    U.milestoneRequestId = reqId;
-    await saveUser();
-    showToast(t('msSent'));
-    nav('me');
-  }catch(e){
-    console.error(e);
-    showToast(t('msError'));
-  }
-}
-
-// ---------- i18n ----------
-const I18N = {
-  en: {
-    navHome:'Home', navWork:'Work', navTeam:'Team', navMe:'Me', navLeaderboard:'Top 100',
-    lbTitle:'Top 100 Leaderboard', lbSub:'Pakistan ka sabse bara investors community',
-    lbLoading:'Loading leaderboard...', lbEmpty:'No data yet — be the first!', lbError:'Could not load leaderboard',
-    lbYou:'YOU', lbRefers:'Refers', lbTeamDeposit:'Team Deposit', lbYourRank:'Your Rank',
-    msTitle:'Milestone Achieved!', msSub:'You crossed Rs 10 Lakh team deposit', msClaim:'Claim Rs 20,000 Milestone Bonus',
-    msPending:'Bonus Request Pending — Admin will approve soon', msApproved:'Bonus Approved! Added to wallet',
-    msSent:'Request sent! Admin will approve after verification.',
-    msAlreadyPending:'Bonus request already pending', msAlreadyClaimed:'You already claimed this bonus',
-    msNotEligible:'Not eligible yet — keep building your team', msError:'Could not send request — try again',
-    bonusToastT:'Daily Login Bonus', supportT:'Contact Support'
-  },
-  ur: {
-    navHome:'Home', navWork:'Kaam', navTeam:'Team', navMe:'Profile', navLeaderboard:'Top 100',
-    lbTitle:'Top 100 Leaderboard', lbSub:'Pakistan ki sab se bari investors ki community',
-    lbLoading:'Leaderboard load ho raha hai...', lbEmpty:'Abhi koi data nahi — pehlay aap banein!', lbError:'Leaderboard load nahi hua',
-    lbYou:'AAP', lbRefers:'Members', lbTeamDeposit:'Team Deposit', lbYourRank:'Aapka Rank',
-    msTitle:'Mubarak Ho! Milestone Mil Gaya', msSub:'Aap ne Rs 10 Lakh team deposit cross kar liya',
-    msClaim:'Rs 20,000 Milestone Bonus Claim Karein', msPending:'Bonus request pending — Admin jald approve karega',
-    msApproved:'Bonus Approve ho gaya! Wallet mein add ho gaya',
-    msSent:'Request bhej di! Admin verification ke baad approve karega.',
-    msAlreadyPending:'Bonus request pehle se pending hai', msAlreadyClaimed:'Aap yeh bonus pehle hi claim kar chuke hain',
-    msNotEligible:'Abhi eligible nahi — apni team banate rahein', msError:'Request nahi gayi — dobara try karein',
-    bonusToastT:'Daily Login Bonus', supportT:'Support se Rabta'
-  }
-};
-let CUR_LANG = localStorage.getItem('ngLang') || 'en';
-
-function t(key){
-  return (I18N[CUR_LANG] && I18N[CUR_LANG][key]) || (I18N.en[key]) || key;
-}
-
-function applyLang(){
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k = el.getAttribute('data-i18n');
-    el.innerText = t(k);
+// --- LIVE EARNING METER (per-second profit on Active Capital) ---
+function liveProfitNow(){
+  const now=Date.now();let total=0;
+  (U?.activePlans||[]).forEach(up=>{
+    if(up.expiryDate && now>up.expiryDate) return;
+    const cap=up.activeCapital || Math.floor((up.investAmount||pl(up.id)?.price||0)*0.9);
+    const dailyP=cap*DAILY_RATE;
+    const start=up.meterStart || up.date || now;
+    const elapsed=Math.max(0,(Math.min(now,up.expiryDate||now)-start)/1000);
+    total += elapsed*(dailyP/86400);
   });
-  // Toggle button states
-  const en = g('langEn'), ur = g('langUr');
-  if(en) en.classList.toggle('on', CUR_LANG==='en');
-  if(ur) ur.classList.toggle('on', CUR_LANG==='ur');
-  // Update bonus toast title
-  const bt = document.querySelector('#bonusToast .bt-t');
-  if(bt) bt.innerText = t('bonusToastT') + ' 🎁';
+  return total;
+}
+function startLiveMeter(){
+  if(meterI){clearInterval(meterI);meterI=null;}
+  if(!(U?.activePlans||[]).length) return;
+  function tick(){
+    const el=g('meterAmt');if(!el){clearInterval(meterI);meterI=null;return;}
+    const v=liveProfitNow();
+    el.innerText='Rs '+v.toFixed(4);
+    const btn=g('meterBtn');if(btn) btn.disabled = v<1;
+  }
+  tick();meterI=setInterval(tick,200);
+}
+async function collectLiveProfit(){
+  const v=liveProfitNow();
+  const intV=Math.floor(v);
+  if(intV<1) return showToast('⚠️ Min Rs 1 chahiye — thodi der ruko');
+  const now=Date.now();
+  (U.activePlans||[]).forEach(up=>{ up.meterStart=now; });
+  U.balance=(U.balance||0)+intV;
+  U.totalEarn=(U.totalEarn||0)+intV;
+  if(navigator.vibrate)navigator.vibrate([40,20,60]);
+  playCoinSound();
+  await saveUser();
+  showToast('✅ Rs '+fmt(intV)+' wallet mein add ho gaya!');
+  nav('home');
 }
 
-function setLang(lang){
-  CUR_LANG = lang;
-  localStorage.setItem('ngLang', lang);
-  applyLang();
-  // Re-render current tab
-  const tabs = ['home','work','leaderboard','team','me'];
-  const cur = tabs.find(x=>g('nb-'+x)?.classList.contains('on')) || 'home';
-  nav(cur);
-}
-
-Object.assign(window, { setLang, applyLang, claimMilestoneBonus, renderLeaderboard, goldVisual });
-
+Object.assign(window,{updateCalc,switchLtTab,submitSupportTicket,collectLiveProfit});
 
 function openWA(){window.open(APP_WA,'_blank');}
 
-Object.assign(window,{nav,showLogin,showReg,handleLogin,handleReg,openLogoutModal,closeLogoutModal,doLogout,buyPlan,confirmYes,confirmNo,claimTask,closeClaimPopup,closePlanBuyOverlay,setMethod,doCopy,submitInvest,submitWith,showToast,openWA});
+Object.assign(window,{nav,showLogin,showReg,handleLogin,handleReg,verifyOtp,resendOtp,cancelOtp,openLogoutModal,closeLogoutModal,doLogout,buyPlan,confirmYes,confirmNo,collectLiveProfit,closeClaimPopup,closePlanBuyOverlay,setMethod,doCopy,submitInvest,submitWith,showToast,openWA});
 
 window.addEventListener('DOMContentLoaded',()=>{
   const saved=localStorage.getItem('savedRef');
   if(saved){const ri=g('rRef');if(ri)ri.value=saved;const rb=g('refBadge');if(rb){rb.style.display='block';g('refBadgeText').innerText=`Referred by: ${saved}`;}}
+  document.querySelectorAll('.otp-inp').forEach((inp,idx,arr)=>{
+    inp.addEventListener('input',e=>{const v=e.target.value.replace(/\D/g,'');e.target.value=v.slice(0,1);if(v && idx<arr.length-1) arr[idx+1].focus();});
+    inp.addEventListener('keydown',e=>{if(e.key==='Backspace' && !inp.value && idx>0) arr[idx-1].focus();});
+    inp.addEventListener('paste',e=>{e.preventDefault();const txt=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);[...txt].forEach((ch,i)=>{if(arr[i]){arr[i].value=ch;}});const next=Math.min(txt.length,arr.length-1);if(arr[next])arr[next].focus();});
+  });
 });
 
-function showLogin(){g('loginBox').style.display='block';g('regBox').style.display='none';g('lErr').style.display='none';}
-function showReg(){g('loginBox').style.display='none';g('regBox').style.display='block';g('rErr').style.display='none';}
+function showLogin(){g('loginBox').style.display='block';g('regBox').style.display='none';g('otpBox').style.display='none';g('lErr').style.display='none';}
+function showReg(){g('loginBox').style.display='none';g('regBox').style.display='block';g('otpBox').style.display='none';g('rErr').style.display='none';}
+function showOtp(){g('loginBox').style.display='none';g('regBox').style.display='none';g('otpBox').style.display='block';g('oErr').style.display='none';document.querySelectorAll('.otp-inp').forEach(i=>i.value='');setTimeout(()=>document.querySelector('.otp-inp')?.focus(),200);}
 function showErr(id,msg){const e=g(id);e.innerText=msg;e.style.display='block';}
-function setBusy(id,b){const btn=g(id);btn.disabled=b;btn.style.opacity=b?'0.6':'1';btn.innerText=b?(id==='lBtn'?'Login ho raha hai...':'Account ban raha hai...'):(id==='lBtn'?'LOGIN':'REGISTER KAREIN');}
+function setBusy(id,b){const btn=g(id);btn.disabled=b;btn.style.opacity=b?'0.6':'1';const labels={lBtn:['LOGIN','Login ho raha hai...'],rBtn:['SEND OTP & REGISTER','OTP bhej rahe hain...'],oBtn:['VERIFY & ACTIVATE ACCOUNT','Verify ho raha hai...']};const l=labels[id];if(l)btn.innerText=b?l[1]:l[0];}
+
+function normPhone(input){let p=String(input||'').replace(/\D/g,'');if(p.startsWith('92'))p=p.slice(2);if(p.startsWith('0'))p=p.slice(1);return p;}
+function fullPhone(local){return '+92'+local;}
+function phoneEmail(local){return local+'@nexgen.app';}
+function phoneDbKey(local){return 'p'+local;}
+
+let recaptchaVerifier=null, confirmationResult=null, pendingReg=null;
+
+function ensureRecaptcha(){
+  if(recaptchaVerifier) return recaptchaVerifier;
+  recaptchaVerifier=new RecaptchaVerifier(auth,'recaptcha-container',{'size':'normal','callback':()=>{},'expired-callback':()=>{try{recaptchaVerifier.clear();}catch(e){}recaptchaVerifier=null;}});
+  recaptchaVerifier.render().catch(()=>{});
+  return recaptchaVerifier;
+}
 
 async function handleLogin(){
-  const e=g('lEmail').value.trim(),p=g('lPass').value;g('lErr').style.display='none';
-  if(!e)return showErr('lErr','âš ï¸ Email address likhein');if(!p)return showErr('lErr','âš ï¸ Password likhein');
+  const local=normPhone(g('lPhone').value),p=g('lPass').value;g('lErr').style.display='none';
+  if(!local||local.length!==10||!local.startsWith('3'))return showErr('lErr','⚠️ Sahi mobile number likhein (3XXXXXXXXX)');
+  if(!p)return showErr('lErr','⚠️ Password likhein');
   setBusy('lBtn',true);
-  try{await signInWithEmailAndPassword(auth,e,p);}
-  catch(err){setBusy('lBtn',false);const m={'auth/user-not-found':'âŒ Yeh email registered nahi hai','auth/wrong-password':'âŒ Password galat hai','auth/invalid-credential':'âŒ Email ya password galat hai','auth/invalid-email':'âŒ Email format sahi nahi','auth/too-many-requests':'âŒ Zyada koshishein â€” baad mein try karein'};showErr('lErr',m[err.code]||'âŒ '+err.code);}
+  try{await signInWithEmailAndPassword(auth,phoneEmail(local),p);}
+  catch(err){setBusy('lBtn',false);
+    const m={'auth/user-not-found':'❌ Yeh number registered nahi hai','auth/wrong-password':'❌ Password galat hai','auth/invalid-credential':'❌ Number ya password galat hai','auth/too-many-requests':'❌ Zyada koshishein — baad mein try karein','auth/network-request-failed':'❌ Internet check karein'};
+    showErr('lErr',m[err.code]||'❌ '+err.code);
+  }
 }
 
 async function handleReg(){
-  const name=g('rName').value.trim(),e=g('rEmail').value.trim(),p=g('rPass').value,refBy=(g('rRef')?.value||'').trim();
+  const name=g('rName').value.trim(),local=normPhone(g('rPhone').value),p=g('rPass').value,refBy=(g('rRef')?.value||'').trim();
   g('rErr').style.display='none';
-  if(!name)return showErr('rErr','âš ï¸ Naam likhein');if(!e)return showErr('rErr','âš ï¸ Email likhein');
-  if(!p)return showErr('rErr','âš ï¸ Password likhein');if(p.length<6)return showErr('rErr','âš ï¸ Password kam se kam 6 characters');
+  if(!name)return showErr('rErr','⚠️ Naam likhein');
+  if(!local||local.length!==10||!local.startsWith('3'))return showErr('rErr','⚠️ Sahi mobile number likhein (3XXXXXXXXX)');
+  if(!p)return showErr('rErr','⚠️ Password likhein');
+  if(p.length<6)return showErr('rErr','⚠️ Password kam se kam 6 characters');
   setBusy('rBtn',true);
   try{
-    const c=await createUserWithEmailAndPassword(auth,e,p);UID=c.user.uid;let upline={};
+    const exist=await get(child(ref(db),`phoneMap/${phoneDbKey(local)}`));
+    if(exist.exists()){setBusy('rBtn',false);return showErr('rErr','❌ Yeh mobile number pehle se registered hai — Login karein');}
+    pendingReg={name,local,password:p,refBy};
+    const verifier=ensureRecaptcha();
+    confirmationResult=await signInWithPhoneNumber(auth,fullPhone(local),verifier);
+    setBusy('rBtn',false);
+    g('otpPhoneShown').innerText=fullPhone(local);
+    showOtp();
+  }catch(err){
+    setBusy('rBtn',false);
+    try{recaptchaVerifier&&recaptchaVerifier.clear();}catch(e){}recaptchaVerifier=null;
+    const m={'auth/invalid-phone-number':'❌ Phone number format galat','auth/too-many-requests':'❌ Zyada koshishein — thodi der baad try karein','auth/quota-exceeded':'❌ SMS quota khatam — admin se rabta karein','auth/captcha-check-failed':'❌ Captcha verify karein'};
+    showErr('rErr',m[err.code]||'❌ '+(err.code||err.message||'OTP nahi bhej saka'));
+  }
+}
+
+async function verifyOtp(){
+  if(!confirmationResult||!pendingReg)return showErr('oErr','⚠️ Session expire — dobara register karein');
+  const code=[...document.querySelectorAll('.otp-inp')].map(i=>i.value).join('');
+  if(code.length!==6)return showErr('oErr','⚠️ 6-digit code likhein');
+  setBusy('oBtn',true);
+  let phoneUser=null;
+  try{
+    const cred=await confirmationResult.confirm(code);
+    phoneUser=cred.user;
+    const emailCred=EmailAuthProvider.credential(phoneEmail(pendingReg.local),pendingReg.password);
+    try{await linkWithCredential(phoneUser,emailCred);}
+    catch(linkErr){
+      if(linkErr.code==='auth/email-already-in-use'||linkErr.code==='auth/credential-already-in-use'){
+        try{await deleteUser(phoneUser);}catch(e){}
+        setBusy('oBtn',false);return showErr('oErr','❌ Account conflict — admin se rabta karein');
+      }
+      throw linkErr;
+    }
+    UID=phoneUser.uid;
+    let upline={};const refBy=pendingReg.refBy;
     if(refBy){upline.l1=refBy;try{const l1s=await get(child(ref(db),`users/${refBy}`));if(l1s.exists()){const l1d=l1s.val();if(l1d.referredBy){upline.l2=l1d.referredBy;try{const l2s=await get(child(ref(db),`users/${l1d.referredBy}`));if(l2s.exists()){const l2d=l2s.val();if(l2d.referredBy)upline.l3=l2d.referredBy;}}catch(e2){}}}}catch(e1){}}
-    await set(ref(db,'users/'+UID),{email:e,name,balance:0,totalEarn:0,teamEarn:0,joinDate:Date.now(),referredBy:refBy||null,upline,teamCount:0,activePlans:[],investments:[],withdraws:[],settings:{}});
+    await set(ref(db,'users/'+UID),{phone:fullPhone(pendingReg.local),phoneLocal:pendingReg.local,email:phoneEmail(pendingReg.local),name:pendingReg.name,balance:0,totalEarn:0,teamEarn:0,joinDate:Date.now(),referredBy:refBy||null,upline,teamCount:0,activePlans:[],investments:[],withdraws:[],settings:{}});
+    await set(ref(db,'phoneMap/'+phoneDbKey(pendingReg.local)),UID);
     if(refBy){try{const rS=await get(child(ref(db),`users/${refBy}`));if(rS.exists()){await update(ref(db,`users/${refBy}`),{teamCount:(rS.val().teamCount||0)+1});}}catch(e){}}
     localStorage.removeItem('savedRef');
-  }catch(err){setBusy('rBtn',false);const m={'auth/email-already-in-use':'âŒ Yeh email pehle se registered hai','auth/weak-password':'âŒ Password zyada mushkil banayein','auth/invalid-email':'âŒ Email format sahi nahi'};showErr('rErr',m[err.code]||'âŒ '+err.code);}
+    pendingReg=null;confirmationResult=null;
+  }catch(err){
+    setBusy('oBtn',false);
+    const m={'auth/invalid-verification-code':'❌ OTP galat — dobara try karein','auth/code-expired':'❌ Code expire — Resend karein'};
+    showErr('oErr',m[err.code]||'❌ '+(err.code||err.message||'Verify nahi hua'));
+  }
 }
+
+async function resendOtp(){
+  if(!pendingReg)return showToast('Pehle register form bharein');
+  const link=g('resendLink');if(link)link.style.opacity='0.5';
+  try{
+    try{recaptchaVerifier&&recaptchaVerifier.clear();}catch(e){}recaptchaVerifier=null;
+    const verifier=ensureRecaptcha();
+    confirmationResult=await signInWithPhoneNumber(auth,fullPhone(pendingReg.local),verifier);
+    showToast('✅ Naya OTP bhej diya');
+  }catch(err){showToast('❌ Resend fail — '+(err.code||'try again'));}
+  finally{if(link)link.style.opacity='1';}
+}
+
+function cancelOtp(){pendingReg=null;confirmationResult=null;try{recaptchaVerifier&&recaptchaVerifier.clear();}catch(e){}recaptchaVerifier=null;showReg();}
 
 function openLogoutModal(){g('logoutModal').classList.add('open');}
 function closeLogoutModal(){g('logoutModal').classList.remove('open');}
-function doLogout(){closeLogoutModal();if(cdI){clearInterval(cdI);cdI=null;}signOut(auth).then(()=>location.reload());}
+function doLogout(){closeLogoutModal();if(cdI){clearInterval(cdI);cdI=null;}if(meterI){clearInterval(meterI);meterI=null;}signOut(auth).then(()=>location.reload());}
 
 onAuthStateChanged(auth,async u=>{
   if(u){UID=u.uid;g('authScreen').style.display='none';g('loading').style.display='flex';await loadData();}
-  else{g('loading').style.display='none';g('app').style.display='none';const lt=g('langToggle');if(lt)lt.style.display='none';g('authScreen').style.display='block';}
+  else{g('loading').style.display='none';g('app').style.display='none';g('authScreen').style.display='block';}
 });
 
 async function loadData(){
   try{
     const[s,cfg]=await Promise.all([get(child(ref(db),`users/${UID}`)),get(ref(db,'appSettings'))]);
     if(cfg.exists()){const c=cfg.val();if(c.epNum)PAY.ep.num=c.epNum;if(c.jcNum)PAY.jc.num=c.jcNum;if(c.tillId)PAY.till.num=c.tillId;if(c.waLink)APP_WA=c.waLink;}
-    if(s.exists()){U=s.val();U.activePlans=U.activePlans||[];U.investments=U.investments||[];U.withdraws=U.withdraws||[];U.settings=U.settings||{};U.name=U.name||U.email.split('@')[0];U.totalEarn=U.totalEarn||0;U.teamEarn=U.teamEarn||0;U.balance=U.balance||0;U.upline=U.upline||{};U.teamCount=U.teamCount||0;}
-    else{U={email:auth.currentUser.email,name:auth.currentUser.email.split('@')[0],balance:0,totalEarn:0,teamEarn:0,joinDate:Date.now(),referredBy:null,upline:{},teamCount:0,activePlans:[],investments:[],withdraws:[],settings:{}};await saveUser();}
-    updateHeader();g('loading').style.display='none';g('app').style.display='flex';g('langToggle').style.display='flex';applyLang();nav('home');checkDailyBonus();
-  }catch(e){showToast("Data load error â€” internet check karein");g('loading').style.display='none';}
+    if(s.exists()){U=s.val();U.activePlans=U.activePlans||[];U.investments=U.investments||[];U.withdraws=U.withdraws||[];U.settings=U.settings||{};U.name=U.name||(U.phone||'User');U.totalEarn=U.totalEarn||0;U.teamEarn=U.teamEarn||0;U.balance=U.balance||0;U.upline=U.upline||{};U.teamCount=U.teamCount||0;U.phone=U.phone||(auth.currentUser.phoneNumber||'');}
+    else{U={phone:auth.currentUser.phoneNumber||'',email:auth.currentUser.email||'',name:'User',balance:0,totalEarn:0,teamEarn:0,joinDate:Date.now(),referredBy:null,upline:{},teamCount:0,activePlans:[],investments:[],withdraws:[],settings:{}};await saveUser();}
+    updateHeader();g('loading').style.display='none';g('app').style.display='flex';nav('home');checkDailyBonus();
+  }catch(e){showToast("Data load error — internet check karein");g('loading').style.display='none';}
 }
 
 async function saveUser(){await set(ref(db,'users/'+UID),U);updateHeader();}
 function updateHeader(){
-  g('hName').innerText=U.name||U.email.split('@')[0];
+  g('hName').innerText=U.name||U.phone||'User';
   const bal=g('hBal');
   const cur=parseInt((bal.innerText||'').replace(/[^\d]/g,''))||0;
   const tgt=U.balance||0;
@@ -1228,15 +1134,15 @@ function fbCopy(t,cb){const ta=document.createElement('textarea');ta.value=t;ta.
 
 function nav(tab){
   if(cdI){clearInterval(cdI);cdI=null;}
-  ['home','work','leaderboard','team','me'].forEach(t=>g('nb-'+t)?.classList.toggle('on',t===tab));
+  ['home','work','team','me'].forEach(t=>g('nb-'+t)?.classList.toggle('on',t===tab));
   const c=g('mainContent');c.style.opacity='0';c.style.transform='translateY(12px)';
   setTimeout(()=>{c.innerHTML='';c.style.transition='opacity 0.35s ease,transform 0.35s ease';c.style.opacity='1';c.style.transform='translateY(0)';
-    if(tab==='home')renderHome(c);else if(tab==='work')renderWork(c);else if(tab==='invest')renderInvest(c);else if(tab==='leaderboard')renderLeaderboard(c);else if(tab==='team')renderTeam(c);else if(tab==='me')renderMe(c);
+    if(tab==='home')renderHome(c);else if(tab==='work')renderWork(c);else if(tab==='invest')renderInvest(c);else if(tab==='team')renderTeam(c);else if(tab==='me')renderMe(c);
   },80);
 }
 
 async function giveCommission(investorUID,amount){
-  try{const snap=await get(child(ref(db),`users/${investorUID}`));if(!snap.exists())return;const investor=snap.val();const up=investor.upline||{};const levels=[{uid:up.l1,rate:COMM.l1,label:'L1'},{uid:up.l2,rate:COMM.l2,label:'L2'},{uid:up.l3,rate:COMM.l3,label:'L3'}];for(const lv of levels){if(!lv.uid)continue;try{const ls=await get(child(ref(db),`users/${lv.uid}`));if(!ls.exists())continue;const ld=ls.val();const comm=Math.floor(amount*lv.rate);if(comm<=0)continue;const cr={id:Date.now()+Math.random(),type:'commission',fromUID:investorUID,fromName:investor.name||'',level:lv.label,rate:(lv.rate*100)+'%',amount:comm,date:new Date().toLocaleDateString('en-PK')};const ec=ld.commissions||[];ec.push(cr);const upd={balance:(ld.balance||0)+comm,teamEarn:(ld.teamEarn||0)+comm,totalEarn:(ld.totalEarn||0)+comm,commissions:ec};if(lv.label==='L1'){upd.totalTeamDeposit=(ld.totalTeamDeposit||0)+amount;}await update(ref(db,`users/${lv.uid}`),upd);}catch(e){}}}catch(e){}
+  try{const snap=await get(child(ref(db),`users/${investorUID}`));if(!snap.exists())return;const investor=snap.val();const up=investor.upline||{};const levels=[{uid:up.l1,rate:COMM.l1,label:'L1'},{uid:up.l2,rate:COMM.l2,label:'L2'},{uid:up.l3,rate:COMM.l3,label:'L3'}];for(const lv of levels){if(!lv.uid)continue;try{const ls=await get(child(ref(db),`users/${lv.uid}`));if(!ls.exists())continue;const ld=ls.val();const comm=Math.floor(amount*lv.rate);if(comm<=0)continue;const cr={id:Date.now()+Math.random(),type:'commission',fromUID:investorUID,fromName:investor.name||'',level:lv.label,rate:(lv.rate*100)+'%',amount:comm,date:new Date().toLocaleDateString('en-PK')};const ec=ld.commissions||[];ec.push(cr);await update(ref(db,`users/${lv.uid}`),{balance:(ld.balance||0)+comm,teamEarn:(ld.teamEarn||0)+comm,totalEarn:(ld.totalEarn||0)+comm,commissions:ec});}catch(e){}}}catch(e){}
 }
 
 // ===== HOME =====
@@ -1246,7 +1152,7 @@ function renderHome(c){
   const planRows=PLANS.map(p=>{const ap=U.activePlans.find(x=>x.id===p.id);const a=!!(ap&&(!ap.expiryDate||ap.expiryDate>Date.now()));const col=TC[p.id]||'var(--g1)';const daysLeft=a&&ap.expiryDate?Math.max(0,Math.ceil((ap.expiryDate-Date.now())/864e5)):0;
     return`<div class="plan-card ${a?'active-plan':''}" id="pC${p.id}"><div class="plan-top-line"></div>${PLAN_TAGS[p.id]?`<span class="plan-tag ${PLAN_TAGS[p.id].cls}">${PLAN_TAGS[p.id].txt}</span>`:''}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <div style="display:flex;align-items:center;gap:14px;">${goldVisual(p.id)}
+      <div style="display:flex;align-items:center;gap:14px;"><div class="plan-icon-wrap"><i class="fas ${p.icon}" style="color:${col};font-size:18px;"></i></div>
       <div><p style="font-weight:800;font-size:16px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--text3);margin-top:3px;">2 Months â€¢ <span style="color:${col};font-weight:700;">2.5% Daily</span></p>${a?`<p style="font-size:10px;color:var(--green);margin-top:3px;font-weight:700;">â³ ${daysLeft} din baqi</p>`:''}</div></div>
       <div style="text-align:right;">${a?`<div class="plan-badge float-badge"><i class="fas fa-check" style="font-size:9px;"></i> Active</div>`:``}<p style="font-size:21px;font-weight:800;color:${col};margin-top:${a?'6px':'0'};">Rs ${fmt(p.price)}</p></div>
     </div>
@@ -1267,7 +1173,7 @@ function renderHome(c){
   </div>
 
   <div class="hero"><div style="position:relative;z-index:1;"><p class="hero-label">Total Wallet Balance</p><div class="hero-amt">Rs ${fmt(U.balance)}</div><div class="hero-btns"><button onclick="nav('invest')" class="hbtn hbtn-gold"><i class="fas fa-plus"></i> Invest Karein</button><button onclick="nav('me')" class="hbtn hbtn-dark"><i class="fas fa-arrow-up"></i> Withdraw</button></div></div><i class="fas fa-chart-line" style="position:absolute;right:-16px;bottom:-28px;font-size:150px;color:rgba(255,208,96,0.04);pointer-events:none;"></i></div>
-  <div class="stat-grid"><div class="stat-box"><div class="stat-box-label">Total Earned</div><div class="stat-box-val" style="color:var(--green);">Rs ${fmt(U.totalEarn)}</div></div><div class="stat-box"><div class="stat-box-label">Active Plans</div><div class="stat-box-val" style="color:var(--g1);">${U.activePlans.length}</div></div>${totalD>0?`<div class="stat-box full-span" style="border-color:rgba(0,232,132,0.15);background:linear-gradient(135deg,var(--surface),rgba(0,232,132,0.03));"><div class="stat-box-label" style="color:var(--green);">Combined Daily Profit</div><div class="stat-box-val" style="color:var(--green);font-size:28px;">Rs ${fmt(totalD)}</div></div>`:''}</div>
+  ${(U.activePlans||[]).filter(up=>!up.expiryDate||up.expiryDate>Date.now()).length?`<div class="meter-card"><div class="meter-label"><span class="ml-dot"></span>Live Earning Meter</div><div class="meter-amt" id="meterAmt">Rs 0.0000</div><div class="meter-rate">Per second profit on <b>Active Capital</b> • 2.5% daily</div><button id="meterBtn" class="meter-collect" onclick="collectLiveProfit()" disabled><i class="fas fa-hand-holding-usd" style="margin-right:8px;"></i>COLLECT TO WALLET</button></div>`:''}<div class="stat-grid"><div class="stat-box"><div class="stat-box-label">Total Earned</div><div class="stat-box-val" style="color:var(--green);">Rs ${fmt(U.totalEarn)}</div></div><div class="stat-box"><div class="stat-box-label">Active Plans</div><div class="stat-box-val" style="color:var(--g1);">${U.activePlans.length}</div></div>${totalD>0?`<div class="stat-box full-span" style="border-color:rgba(0,232,132,0.15);background:linear-gradient(135deg,var(--surface),rgba(0,232,132,0.03));"><div class="stat-box-label" style="color:var(--green);">Combined Daily Profit</div><div class="stat-box-val" style="color:var(--green);font-size:28px;">Rs ${fmt(totalD)}</div></div>`:''}</div>
 
   <!-- How It Works -->
   <div class="hiw-card">
@@ -1287,8 +1193,10 @@ function renderHome(c){
     <div class="calc-amt" id="calcAmt">Rs 25,000</div>
     <input type="range" min="600" max="1000000" step="100" value="25000" class="calc-slider" id="calcSlider" oninput="updateCalc(this.value)">
     <div class="calc-range"><span>Rs 600</span><span>Rs 10,00,000</span></div>
+    <div class="calc-tax-row"><span class="ctr-l"><i class="fas fa-receipt" style="margin-right:6px;"></i>10% Activation Fee</span><span class="ctr-v" id="calcFee">-Rs 2,500</span></div>
+    <div class="calc-tax-row cap"><span class="ctr-l"><i class="fas fa-piggy-bank" style="margin-right:6px;"></i>Active Capital (90%)</span><span class="ctr-v" id="calcCap">Rs 22,500</span></div>
     <div class="calc-out">
-      <div class="calc-cell"><div class="cl">Daily (2.5%)</div><div class="cv" id="calcDaily">Rs 625</div></div>
+      <div class="calc-cell"><div class="cl">Daily (2.5%)</div><div class="cv" id="calcDaily">Rs 562</div></div>
       <div class="calc-cell"><div class="cl">Monthly</div><div class="cv" id="calcMonthly">Rs 18,750</div></div>
       <div class="calc-cell"><div class="cl">60 Day Total</div><div class="cv" id="calcTotal">Rs 37,500</div></div>
     </div>
@@ -1307,7 +1215,7 @@ function renderHome(c){
   </div>
   `;
   // start enhancement widgets
-  setTimeout(()=>{startTicker();startBannerSlider();updateCalc(25000);renderLiveTxns();},50);
+  setTimeout(()=>{startTicker();startBannerSlider();updateCalc(25000);renderLiveTxns();startLiveMeter();},50);
 }
 
 // ===== WORK =====
@@ -1316,14 +1224,14 @@ function renderWork(c){
   const now=Date.now();const isLive=up=>!up.expiryDate||up.expiryDate>now;
   const tk=todayKey();const totalD=U.activePlans.reduce((s,up)=>s+(isLive(up)?(pl(up.id)?.daily||0):0),0);const livePlans=U.activePlans.filter(isLive);const claimed=livePlans.filter(up=>up.lastClaim===tk).length;const allDone=livePlans.length>0&&claimed===livePlans.length;
   const tasks=U.activePlans.map((up,i)=>{const p=pl(up.id);if(!p)return'';const expired=up.expiryDate&&now>up.expiryDate;const done=up.lastClaim===tk;const pd=up.date&&!isNaN(Number(up.date))?Number(up.date):Date.now();const days=Math.max(1,Math.floor((now-pd)/864e5)+1);const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-now)/864e5)):0;
-    if(expired){return`<div class="task-card" style="border-left-color:var(--red);opacity:0.85;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;">${goldVisual(p.id)}<div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--red);margin-top:3px;">â³ Expired â€” 2 months pooray ho gaye</p></div></div><span class="bdg b-rej">EXPIRED</span></div><button onclick="buyPlan(${p.id})" style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;box-shadow:0 4px 20px rgba(255,208,96,0.25);">ðŸ”„ DOBARA BUY KAREIN</button></div>`;}
-    return`<div class="task-card ${done?'done':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;">${goldVisual(p.id)}<div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--text3);margin-top:3px;">${days} din active â€¢ Rs ${fmt(days*p.daily)} kamaya</p>${up.expiryDate?`<p style="font-size:10px;color:var(--g1);margin-top:3px;font-weight:700;">â³ ${daysLeft} din baqi (2 months mein expire)</p>`:''}</div></div><div style="text-align:right;"><div style="font-size:clamp(14px,4.5vw,20px);font-weight:800;color:var(--green);white-space:nowrap;">+Rs ${fmt(p.daily)}</div><div style="font-size:10px;color:var(--text3);">Today</div></div></div>
-    <button onclick="claimTask(${i})" ${done?'disabled':''} style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:${done?'default':'pointer'};background:${done?'var(--surface3)':'linear-gradient(135deg,var(--g1),var(--g2))'};color:${done?'var(--text3)':'#000'};box-shadow:${done?'none':'0 4px 20px rgba(255,208,96,0.25)'};">${done?'âœ… Aaj Ka Claim Ho Gaya â€” Raat 12 Baje Reset':'ðŸ’° DAILY PROFIT CLAIM KAREIN'}</button>${done?`<div class="plan-cd"><div class="pcd-l">⏳ Next Profit In</div><div class="pcd-v plan-cd-val">${fmtCD(msToMid())}</div></div>`:''}</div>`;
+    if(expired){return`<div class="task-card" style="border-left-color:var(--red);opacity:0.85;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:12px;background:var(--red-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,77,106,0.25);"><i class="fas ${p.icon}" style="color:var(--red);font-size:16px;"></i></div><div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--red);margin-top:3px;">â³ Expired â€” 2 months pooray ho gaye</p></div></div><span class="bdg b-rej">EXPIRED</span></div><button onclick="buyPlan(${p.id})" style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;box-shadow:0 4px 20px rgba(255,208,96,0.25);">ðŸ”„ DOBARA BUY KAREIN</button></div>`;}
+    return`<div class="task-card ${done?'done':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:12px;background:${done?'var(--green-dim)':'var(--gold-dim)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid ${done?'rgba(0,232,132,0.2)':'rgba(255,208,96,0.15)'};"><i class="fas ${p.icon}" style="color:${done?'var(--green)':'var(--g1)'};font-size:16px;"></i></div><div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--text3);margin-top:3px;">${days} din active â€¢ Rs ${fmt(days*p.daily)} kamaya</p>${up.expiryDate?`<p style="font-size:10px;color:var(--g1);margin-top:3px;font-weight:700;">â³ ${daysLeft} din baqi (2 months mein expire)</p>`:''}</div></div><div style="text-align:right;"><div style="font-size:clamp(14px,4.5vw,20px);font-weight:800;color:var(--green);white-space:nowrap;">+Rs ${fmt(p.daily)}</div><div style="font-size:10px;color:var(--text3);">Today</div></div></div>
+    <div style="background:linear-gradient(135deg,rgba(0,232,132,0.06),rgba(0,232,132,0.02));border:1px dashed rgba(0,232,132,0.25);border-radius:var(--r-sm);padding:12px 14px;text-align:center;"><div style="font-size:10px;color:var(--green);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:6px;vertical-align:middle;animation:pulse 1.2s ease infinite;"></span>Live Earning Active</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">Per-second profit counter <b style="color:var(--green);">Home page</b> par chal raha hai — wahan se <b style="color:var(--g1);">Collect to Wallet</b> karein</div></div></div>`;
   }).join('');
-  c.innerHTML=`<div style="background:linear-gradient(145deg,#041A0D,#040D07,#07070F);border:1px solid rgba(0,232,132,0.2);border-radius:var(--r);padding:22px;margin-bottom:14px;position:relative;overflow:hidden;"><div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,132,0.1) 0%,transparent 65%);pointer-events:none;"></div><div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;">Aaj Ka Total Profit</p><h2 style="font-size:clamp(22px,7vw,36px);font-weight:800;color:var(--green);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;">Rs ${fmt(totalD)}</h2><p style="font-size:11px;color:rgba(0,232,132,0.4);margin-top:6px;">Claimed: ${claimed} / ${U.activePlans.length} plans</p></div><div style="width:64px;height:64px;border-radius:50%;background:rgba(0,232,132,0.1);border:1px solid rgba(0,232,132,0.2);display:flex;align-items:center;justify-content:center;"><i class="fas fa-coins" style="font-size:24px;color:var(--green);"></i></div></div></div>
-  ${allDone?`<div class="countdown-card"><div><p style="font-size:10px;color:#818cf8;text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;">ðŸŒ™ Next Claim Mein</p><div id="cdT" class="cd-val">${fmtCD(msToMid())}</div><p style="font-size:11px;color:rgba(129,140,248,0.4);margin-top:6px;">Midnight reset âœ…</p></div><div style="text-align:right;"><i class="fas fa-moon" style="font-size:32px;color:rgba(129,140,248,0.3);"></i><div style="margin-top:12px;font-size:clamp(14px,4.5vw,20px);font-weight:800;color:rgba(0,232,132,0.7);white-space:nowrap;">Rs ${fmt(totalD)}</div><p style="font-size:10px;color:var(--text3);">Kal milega</p></div></div>`:''}
+  c.innerHTML=`<div style="background:linear-gradient(145deg,#041A0D,#040D07,#07070F);border:1px solid rgba(0,232,132,0.2);border-radius:var(--r);padding:22px;margin-bottom:14px;position:relative;overflow:hidden;"><div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,132,0.1) 0%,transparent 65%);pointer-events:none;"></div><div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;">Total Daily Profit (on Active Capital)</p><h2 style="font-size:clamp(22px,7vw,36px);font-weight:800;color:var(--green);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;">Rs ${fmt(totalD)}</h2><p style="font-size:11px;color:rgba(0,232,132,0.4);margin-top:6px;">Live counter <b style="color:var(--green);">Home page</b> par dekho</p></div><div style="width:64px;height:64px;border-radius:50%;background:rgba(0,232,132,0.1);border:1px solid rgba(0,232,132,0.2);display:flex;align-items:center;justify-content:center;"><i class="fas fa-coins" style="font-size:24px;color:var(--green);"></i></div></div></div>
+  
   <p class="sec-label">Daily Mining Tasks</p>${tasks}`;
-  if(allDone){cdI=setInterval(()=>{const el=g('cdT');if(!el){clearInterval(cdI);return;}const ms=msToMid();if(ms<=0){clearInterval(cdI);nav('work');}else el.innerText=fmtCD(ms);},1000);}
+  /* live meter handles profit */
   setTimeout(startPlanCountdowns,80);
 }
 
@@ -1354,13 +1262,13 @@ function renderTeam(c){
 // ===== ME =====
 function renderMe(c){
   const tI=(U.activePlans||[]).reduce((s,up)=>s+(pl(up.id)?.price||0),0);const aW=(U.withdraws||[]).filter(w=>w.status==='Approved').reduce((s,w)=>s+w.amount,0);const pI=(U.investments||[]).filter(d=>d.status==='Pending').reduce((s,d)=>s+d.amount,0);const tD=(U.activePlans||[]).reduce((s,up)=>s+(pl(up.id)?.daily||0),0);const dJ=Math.max(1,Math.floor((Date.now()-(U.joinDate&&!isNaN(Number(U.joinDate))?Number(U.joinDate):Date.now()))/864e5));
-  const pL=(U.activePlans||[]).length?(U.activePlans||[]).map(up=>{const p=pl(up.id);if(!p)return'';const d=Math.max(1,Math.floor((Date.now()-(up.date&&!isNaN(Number(up.date))?Number(up.date):Date.now()))/864e5)+1);const exp=up.expiryDate&&Date.now()>up.expiryDate;const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-Date.now())/864e5)):0;return`<div class="card" style="padding:18px;margin-bottom:9px;${exp?'opacity:0.7;':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;">${goldVisual(p.id)}<div><p style="font-weight:800;font-size:15px;">${p.name}</p><p style="font-size:10px;color:var(--text3);margin-top:2px;">2.5% daily â€¢ 2 Months${up.expiryDate?(exp?` â€¢ <span style="color:var(--red);font-weight:700;">EXPIRED</span>`:` â€¢ <span style="color:var(--g1);font-weight:700;">${daysLeft} din baqi</span>`):''}</p></div></div><span style="background:${exp?'var(--red-dim)':'var(--green-dim)'};color:${exp?'var(--red)':'var(--green)'};font-size:10px;font-weight:700;padding:4px 12px;border-radius:50px;border:1px solid ${exp?'rgba(255,77,106,0.25)':'rgba(0,232,132,0.2)'};">${exp?'EXPIRED':'RUNNING'}</span></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;"><div class="chip"><div class="chip-l">Invest</div><div class="chip-v" style="color:var(--blue);font-size:11px;">Rs ${fmt(p.price)}</div></div><div class="chip"><div class="chip-l">Daily</div><div class="chip-v" style="color:var(--green);font-size:11px;">Rs ${fmt(p.daily)}</div></div><div class="chip"><div class="chip-l">Days</div><div class="chip-v" style="color:var(--g1);font-size:11px;">${d}</div></div><div class="chip"><div class="chip-l">Earned</div><div class="chip-v" style="color:var(--purple);font-size:11px;">Rs ${fmt(d*p.daily)}</div></div></div></div>`;}).join(''):`<div style="background:var(--surface2);border-radius:var(--r-sm);padding:20px;text-align:center;border:1px solid var(--border);"><p style="font-size:13px;color:var(--text3);">Koi active plan nahi â€” <span onclick="nav('invest')" style="color:var(--g1);cursor:pointer;font-weight:700;">Invest karein âš¡</span></p></div>`;
+  const pL=(U.activePlans||[]).length?(U.activePlans||[]).map(up=>{const p=pl(up.id);if(!p)return'';const d=Math.max(1,Math.floor((Date.now()-(up.date&&!isNaN(Number(up.date))?Number(up.date):Date.now()))/864e5)+1);const exp=up.expiryDate&&Date.now()>up.expiryDate;const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-Date.now())/864e5)):0;return`<div class="card" style="padding:18px;margin-bottom:9px;${exp?'opacity:0.7;':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:40px;height:40px;border-radius:11px;background:${exp?'var(--red-dim)':'var(--gold-dim)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas ${p.icon}" style="color:${exp?'var(--red)':'var(--g1)'};font-size:15px;"></i></div><div><p style="font-weight:800;font-size:15px;">${p.name}</p><p style="font-size:10px;color:var(--text3);margin-top:2px;">2.5% daily â€¢ 2 Months${up.expiryDate?(exp?` â€¢ <span style="color:var(--red);font-weight:700;">EXPIRED</span>`:` â€¢ <span style="color:var(--g1);font-weight:700;">${daysLeft} din baqi</span>`):''}</p></div></div><span style="background:${exp?'var(--red-dim)':'var(--green-dim)'};color:${exp?'var(--red)':'var(--green)'};font-size:10px;font-weight:700;padding:4px 12px;border-radius:50px;border:1px solid ${exp?'rgba(255,77,106,0.25)':'rgba(0,232,132,0.2)'};">${exp?'EXPIRED':'RUNNING'}</span></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;"><div class="chip"><div class="chip-l">Invest</div><div class="chip-v" style="color:var(--blue);font-size:11px;">Rs ${fmt(p.price)}</div></div><div class="chip"><div class="chip-l">Daily</div><div class="chip-v" style="color:var(--green);font-size:11px;">Rs ${fmt(p.daily)}</div></div><div class="chip"><div class="chip-l">Days</div><div class="chip-v" style="color:var(--g1);font-size:11px;">${d}</div></div><div class="chip"><div class="chip-l">Earned</div><div class="chip-v" style="color:var(--purple);font-size:11px;">Rs ${fmt(d*p.daily)}</div></div></div></div>`;}).join(''):`<div style="background:var(--surface2);border-radius:var(--r-sm);padding:20px;text-align:center;border:1px solid var(--border);"><p style="font-size:13px;color:var(--text3);">Koi active plan nahi â€” <span onclick="nav('invest')" style="color:var(--g1);cursor:pointer;font-weight:700;">Invest karein âš¡</span></p></div>`;
   const wH=[...(U.withdraws||[])].reverse().slice(0,6).map(w=>`<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:7px;"><div><p style="font-weight:800;font-size:16px;margin-bottom:3px;">Rs ${fmt(w.amount)}</p><p style="font-size:11px;color:var(--text3);">${w.method} â€¢ ${w.num}</p><p style="font-size:10px;color:var(--text3);margin-top:2px;">${w.date}</p></div><span class="bdg ${w.status==='Approved'?'b-appr':w.status==='Rejected'?'b-rej':'b-pend'}">${w.status}</span></div>`).join('')||`<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px;">Koi history nahi</div>`;
   const stats=[{icon:'fa-wallet',label:'Wallet',val:'Rs '+fmt(U.balance),col:'var(--g1)'},{icon:'fa-chart-line',label:'Total Earned',val:'Rs '+fmt(U.totalEarn),col:'var(--green)'},{icon:'fa-piggy-bank',label:'Invested',val:'Rs '+fmt(tI),col:'var(--blue)'},{icon:'fa-arrow-up',label:'Withdrawn',val:'Rs '+fmt(aW),col:'var(--red)'},{icon:'fa-gem',label:'Active Plans',val:String((U.activePlans||[]).length),col:'var(--purple)'},{icon:'fa-coins',label:'Daily Profit',val:'Rs '+fmt(tD),col:'#F59E0B'},{icon:'fa-users',label:'Team Earned',val:'Rs '+fmt(U.teamEarn),col:'var(--cyan)'},{icon:'fa-hourglass-half',label:'Pending',val:'Rs '+fmt(pI),col:'#84cc16'}].map(s=>`<div class="stat-box"><i class="fas ${s.icon}" style="color:${s.col};font-size:14px;margin-bottom:9px;display:block;opacity:0.85;"></i><div class="stat-box-label">${s.label}</div><div class="stat-box-val" style="color:${s.col};font-size:18px;overflow:hidden;">${s.val}</div></div>`).join('');
-  c.innerHTML=`<div class="profile-card"><div class="profile-av"><i class="fas fa-user-astronaut" style="font-size:30px;color:#000;"></i></div><div><h2 style="font-weight:800;font-size:17px;line-height:1.2;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0;">${U.name||U.email.split('@')[0]}</h2><p style="font-size:12px;color:var(--text2);margin-top:5px;">${U.email}</p><p style="font-size:12px;color:var(--g1);margin-top:8px;font-weight:700;"><i class="fas fa-calendar-check" style="margin-right:6px;"></i>Member ${dJ} din se</p></div></div>
+  c.innerHTML=`<div class="profile-card"><div class="profile-av"><i class="fas fa-user-astronaut" style="font-size:30px;color:#000;"></i></div><div><h2 style="font-weight:800;font-size:17px;line-height:1.2;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0;">${U.name||U.phone||'User'}</h2><p style="font-size:12px;color:var(--text2);margin-top:5px;"><i class="fas fa-mobile-alt" style="margin-right:6px;color:var(--g1);"></i>${U.phone||U.email||''}</p><p style="font-size:12px;color:var(--g1);margin-top:8px;font-weight:700;"><i class="fas fa-calendar-check" style="margin-right:6px;"></i>Member ${dJ} din se</p></div></div>
   <p class="sec-label">Account Summary</p><div class="stat-grid" style="margin-bottom:22px;">${stats}</div>
   <p class="sec-label">Mere Active Plans</p><div style="margin-bottom:22px;">${pL}</div>
-  ${(()=>{const td=U.totalTeamDeposit||0;const status=U.milestoneBonusStatus||'';if(td<MILESTONE_TARGET&&status!=='Pending'&&status!=='Approved')return '';let inner='';if(status==='Approved'||status==='Paid'){inner=`<div class="ms-status">✅ ${t('msApproved')}</div>`;}else if(status==='Pending'){inner=`<div class="ms-status">⏳ ${t('msPending')}</div>`;}else{inner=`<button class="ms-btn" onclick="claimMilestoneBonus()"><i class="fas fa-gift" style="margin-right:8px;"></i>${t('msClaim')}</button>`;}return `<div class="milestone-card"><div class="milestone-icon"><i class="fas fa-trophy" style="font-size:28px;color:#000;"></i></div><h3>🎉 ${t('msTitle')}</h3><p class="ms-sub">${t('msSub')}</p><div class="ms-amt">Rs ${fmt(MILESTONE_BONUS)}</div>${inner}</div>`;})()}<p class="sec-label">Paise Nikaalein</p><div class="card" style="padding:24px;margin-bottom:22px;"><div class="info-row" style="margin-bottom:16px;background:var(--gold-dim);border-color:rgba(255,208,96,0.2);"><span style="color:var(--text2);font-size:13px;font-weight:600;">Available Balance</span><span style="font-weight:800;font-size:22px;color:var(--g1);">Rs ${fmt(U.balance)}</span></div><div class="inp-wrap"><i class="fas fa-user inp-icon"></i><input type="text" id="wName" placeholder="Account Holder Name" class="inp"></div><div class="inp-wrap"><i class="fas fa-mobile-alt inp-icon"></i><select id="wMethod" class="inp" style="padding-left:44px;"><option value="EasyPaisa">EasyPaisa</option><option value="JazzCash">JazzCash</option></select></div><div class="inp-wrap"><i class="fas fa-hashtag inp-icon"></i><input type="number" id="wNum" placeholder="Account Number" class="inp"></div><div class="inp-wrap"><i class="fas fa-rupee-sign inp-icon"></i><input type="number" id="wAmt" placeholder="Amount (Min Rs 500)" class="inp" oninput="(function(v){var f=g('wFeePrev');if(!f)return;var a=parseFloat(v)||0;if(a<500){f.innerText='';return;}var fee=Math.ceil(a*0.10);f.innerHTML='💸 10% Fee: <b style=\'color:var(--red);\'>Rs '+fmt(fee)+'</b> &nbsp;•&nbsp; Aap ko milega: <b style=\'color:var(--green);\'>Rs '+fmt(a-fee)+'</b>';})(this.value)"></div><div id="wFeePrev" style="font-size:11px;color:var(--text3);text-align:center;margin:-4px 0 8px;min-height:14px;font-weight:600;"></div><button onclick="submitWith()" style="width:100%;background:linear-gradient(135deg,#FF4D6A,#CC2244);color:#fff;border:none;padding:15px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 4px 24px rgba(255,77,106,0.3);"><i class="fas fa-arrow-up" style="margin-right:8px;"></i>WITHDRAWAL REQUEST KAREIN</button><p style="font-size:11px;color:var(--text3);text-align:center;margin-top:12px;">â± 24 ghante mein process hoga</p></div>
+  <p class="sec-label">Paise Nikaalein</p><div class="card" style="padding:24px;margin-bottom:22px;"><div class="info-row" style="margin-bottom:16px;background:var(--gold-dim);border-color:rgba(255,208,96,0.2);"><span style="color:var(--text2);font-size:13px;font-weight:600;">Available Balance</span><span style="font-weight:800;font-size:22px;color:var(--g1);">Rs ${fmt(U.balance)}</span></div><div class="inp-wrap"><i class="fas fa-user inp-icon"></i><input type="text" id="wName" placeholder="Account Holder Name" class="inp"></div><div class="inp-wrap"><i class="fas fa-mobile-alt inp-icon"></i><select id="wMethod" class="inp" style="padding-left:44px;"><option value="EasyPaisa">EasyPaisa</option><option value="JazzCash">JazzCash</option></select></div><div class="inp-wrap"><i class="fas fa-hashtag inp-icon"></i><input type="number" id="wNum" placeholder="Account Number" class="inp"></div><div class="inp-wrap"><i class="fas fa-rupee-sign inp-icon"></i><input type="number" id="wAmt" placeholder="Amount (Min Rs 500)" class="inp" oninput="(function(v){var f=g('wFeePrev');if(!f)return;var a=parseFloat(v)||0;if(a<500){f.innerText='';return;}var fee=Math.ceil(a*0.10);f.innerHTML='💸 10% Fee: <b style=\'color:var(--red);\'>Rs '+fmt(fee)+'</b> &nbsp;•&nbsp; Aap ko milega: <b style=\'color:var(--green);\'>Rs '+fmt(a-fee)+'</b>';})(this.value)"></div><div id="wFeePrev" style="font-size:11px;color:var(--text3);text-align:center;margin:-4px 0 8px;min-height:14px;font-weight:600;"></div><button onclick="submitWith()" style="width:100%;background:linear-gradient(135deg,#FF4D6A,#CC2244);color:#fff;border:none;padding:15px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 4px 24px rgba(255,77,106,0.3);"><i class="fas fa-arrow-up" style="margin-right:8px;"></i>WITHDRAWAL REQUEST KAREIN</button><p style="font-size:11px;color:var(--text3);text-align:center;margin-top:12px;">â± 24 ghante mein process hoga</p></div>
   <p class="sec-label">Withdrawal History</p><div style="margin-bottom:22px;">${wH}</div>
   <p class="sec-label">Contact Support</p>
   <div class="support-card">
@@ -1402,22 +1310,32 @@ function confirmYes(){
   g('confirmModal').classList.remove('open');
   const p=pl(id);if(!p)return;
   if(U.balance<p.price)return showToast("Balance kam hai!");
+  const fee=Math.floor(p.price*ACTIVATION_FEE);
+  const cap=p.price-fee;
+  const dailyOnCap=Math.floor(cap*DAILY_RATE);
   U.balance-=p.price;
   const ts=Date.now();
-  U.activePlans.push({id,lastClaim:"never",date:ts,expiryDate:ts+(PLAN_DAYS*864e5),dateStr:new Date(ts).toLocaleDateString('en-PK')});
+  U.activePlans.push({
+    id,
+    investAmount:p.price,
+    activationFee:fee,
+    activeCapital:cap,
+    dailyProfit:dailyOnCap,
+    date:ts,
+    meterStart:ts,
+    expiryDate:ts+(PLAN_DAYS*864e5),
+    dateStr:new Date(ts).toLocaleDateString('en-PK'),
+    lastClaim:"never"
+  });
   saveUser();
-  // âœ… AUTO COMMISSION â€” turant upline ko milegi jab plan buy ho
-  giveCommission(UID, p.price).then(()=>{
-    console.log("Commission dedi gayi!");
-  }).catch(e=>console.log("Commission error:",e));
+  giveCommission(UID,p.price).then(()=>{}).catch(e=>console.log("Commission error:",e));
   if(navigator.vibrate)navigator.vibrate([50,30,80,30,120]);
-  // Fill success overlay
   g('pboPlanTitle').innerText=p.name;
-  g('pboPlanSub').innerText='Rs '+fmt(p.price)+' invested â€¢ 2 Months Active ðŸ”¥';
-  g('pboProfitAmt').innerText='+Rs '+fmt(p.daily);
-  g('pboWeekly').innerText='Rs '+fmt(p.daily*7);
-  g('pboMonthly').innerText='Rs '+fmt(p.daily*30);
-  g('pboYearly').innerText='Rs '+fmt(p.daily*365);
+  g('pboPlanSub').innerText='Rs '+fmt(p.price)+' invested • Rs '+fmt(fee)+' fee • Rs '+fmt(cap)+' active 🔥';
+  g('pboProfitAmt').innerText='+Rs '+fmt(dailyOnCap);
+  g('pboWeekly').innerText='Rs '+fmt(dailyOnCap*7);
+  g('pboMonthly').innerText='Rs '+fmt(dailyOnCap*30);
+  g('pboYearly').innerText='Rs '+fmt(dailyOnCap*365);
   const rd=document.querySelector('.pbo-rings');if(rd){const cl=rd.cloneNode(true);rd.parentNode.replaceChild(cl,rd);}
   g('planBuyOverlay').classList.add('show');
   setTimeout(()=>launchParticles(),100);
@@ -1442,7 +1360,7 @@ function closeClaimPopup(){g('successOverlay').classList.remove('show');nav('wor
 function submitInvest(){
   const amt=parseFloat(g('invAmt')?.value||0);const trx=(g('invTrx')?.value||'').trim();
   if(!amt||amt<600)return showToast("âš ï¸ Minimum Rs 600 invest karein");if(!trx||trx.length<4)return showToast("âš ï¸ Valid Transaction ID likhein");
-  U.investments=U.investments||[];U.investments.push({id:Date.now(),amount:amt,trx,method:PAY.till.label,status:'Pending',date:new Date().toLocaleDateString('en-PK'),commissionPaid:false});
+  U.investments=U.investments||[];const _invRec={id:Date.now(),uid:UID,phone:U.phone||'',amount:amt,trx,method:PAY.till.label,status:'Pending',date:new Date().toLocaleDateString('en-PK'),createdAt:Date.now(),commissionPaid:false};U.investments.push(_invRec);try{set(ref(db,'investments/'+_invRec.id),_invRec);}catch(e){}
   saveUser();showToast("âœ… Request submit ho gayi â€” 24 hrs mein approve hogi!");g('invAmt').value='';g('invTrx').value='';nav('invest');
 }
 
@@ -1459,7 +1377,7 @@ function submitWith(){
   const net=amt-fee;
   U.balance-=amt;
   U.withdraws=U.withdraws||[];
-  U.withdraws.push({id:Date.now(),amount:amt,fee,netAmount:net,num,name,method,status:'Pending',date:new Date().toLocaleDateString('en-PK')});
+  const _wRec={id:Date.now(),uid:UID,phone:U.phone||'',amount:amt,fee,netAmount:net,num,name,method,status:'Pending',date:new Date().toLocaleDateString('en-PK'),createdAt:Date.now()};U.withdraws.push(_wRec);try{set(ref(db,'withdraws/'+_wRec.id),_wRec);}catch(e){}
   saveUser();
   showToast("✅ Request submit! Fee Rs "+fmt(fee)+" — Aap ko milega Rs "+fmt(net));
   nav('me');
