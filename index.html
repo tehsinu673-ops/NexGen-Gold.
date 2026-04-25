@@ -690,7 +690,9 @@ const PLANS=[
   {id:12,name:"NexGen Legend",price:1000000,icon:"fa-infinity"}
 ].map(p=>({...p,daily:Math.floor(p.price*0.025)}));
 
-const fmt=n=>(+(n)||0).toLocaleString('en-PK');
+const fmt=n=>Math.floor(+(n)||0).toLocaleString('en-PK');
+const fmtMoney=n=>(+(n)||0).toLocaleString('en-PK',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtPerSec=n=>(+(n)||0).toLocaleString('en-PK',{minimumFractionDigits:4,maximumFractionDigits:4});
 const g=id=>document.getElementById(id);
 const pl=id=>PLANS.find(x=>x.id===id);
 window.g=g;
@@ -700,6 +702,86 @@ function msToMid(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);return 
 function fmtCD(ms){if(ms<=0)return"00:00:00";const h=Math.floor(ms/3600000),mi=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);return`${String(h).padStart(2,'0')}:${String(mi).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
 
 let U=null,UID=null,cdI=null;
+let liveAccrualTimer=null,liveSaveTimer=null,_accrualDirty=false;
+
+// ===== LIVE PER-SECOND PROFIT ACCRUAL =====
+function accrueAllPlans(){
+  if(!U||!Array.isArray(U.activePlans)) return 0;
+  const now=Date.now();let total=0;
+  for(const up of U.activePlans){
+    const p=pl(up.id);if(!p)continue;
+    if(!up.lastAccrualTime){up.lastAccrualTime=up.date||now;}
+    let endTime=now;
+    if(up.expiryDate&&now>up.expiryDate)endTime=up.expiryDate;
+    const elapsed=endTime-up.lastAccrualTime;
+    if(elapsed<=0)continue;
+    const profit=elapsed*((p.daily||0)/86400000);
+    up.lastAccrualTime=endTime;
+    total+=profit;
+  }
+  if(total>0){
+    U.balance=(U.balance||0)+total;
+    U.totalEarn=(U.totalEarn||0)+total;
+    _accrualDirty=true;
+  }
+  return total;
+}
+
+function totalDailyActive(){
+  if(!U||!U.activePlans)return 0;
+  const now=Date.now();
+  return U.activePlans.reduce((s,up)=>{
+    if(up.expiryDate&&now>up.expiryDate)return s;
+    return s+(pl(up.id)?.daily||0);
+  },0);
+}
+
+function updateLiveUI(){
+  const bal=g('hBal');
+  if(bal)bal.innerText='Rs '+fmtMoney(U.balance);
+  // Work tab live counters
+  const totEl=g('liveWalletBig');
+  if(totEl)totEl.innerText='Rs '+fmtMoney(U.balance);
+  const totSecEl=g('liveTotalPerSec');
+  if(totSecEl)totSecEl.innerText='+Rs '+fmtPerSec(totalDailyActive()/86400)+' / sec';
+  if(U&&U.activePlans){
+    const now=Date.now();
+    U.activePlans.forEach((up,i)=>{
+      const p=pl(up.id);if(!p)return;
+      const startTs=up.date&&!isNaN(Number(up.date))?Number(up.date):now;
+      let endTime=now;
+      if(up.expiryDate&&now>up.expiryDate)endTime=up.expiryDate;
+      const elapsed=Math.max(0,endTime-startTs);
+      const earned=elapsed*((p.daily||0)/86400000);
+      const eEl=g('planEarned'+i);if(eEl)eEl.innerText='Rs '+fmtMoney(earned);
+      const lEl=g('planLive'+i);if(lEl)lEl.innerText='+Rs '+fmtPerSec((p.daily||0)/86400)+' / sec';
+    });
+  }
+}
+
+function startLiveAccrual(){
+  if(liveAccrualTimer){clearInterval(liveAccrualTimer);liveAccrualTimer=null;}
+  if(liveSaveTimer){clearInterval(liveSaveTimer);liveSaveTimer=null;}
+  liveAccrualTimer=setInterval(()=>{accrueAllPlans();updateLiveUI();},1000);
+  liveSaveTimer=setInterval(()=>{
+    if(_accrualDirty){_accrualDirty=false;saveUser().catch(()=>{});}
+  },30000);
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    accrueAllPlans();
+    if(_accrualDirty){_accrualDirty=false;saveUser().catch(()=>{});}
+  }else{
+    accrueAllPlans();updateLiveUI();
+  }
+});
+window.addEventListener('beforeunload',()=>{
+  accrueAllPlans();
+  if(_accrualDirty){
+    try{set(ref(db,'users/'+UID),U);}catch(e){}
+  }
+});
 
 // ===== ENHANCEMENT HELPERS =====
 const WITHDRAW_FEE = 0.10;        // 10% withdrawal fee
@@ -922,7 +1004,15 @@ async function handleReg(){
 
 function openLogoutModal(){g('logoutModal').classList.add('open');}
 function closeLogoutModal(){g('logoutModal').classList.remove('open');}
-function doLogout(){closeLogoutModal();if(cdI){clearInterval(cdI);cdI=null;}signOut(auth).then(()=>location.reload());}
+function doLogout(){
+  closeLogoutModal();
+  if(cdI){clearInterval(cdI);cdI=null;}
+  if(liveAccrualTimer){clearInterval(liveAccrualTimer);liveAccrualTimer=null;}
+  if(liveSaveTimer){clearInterval(liveSaveTimer);liveSaveTimer=null;}
+  accrueAllPlans();
+  const finalSave=_accrualDirty?saveUser().catch(()=>{}):Promise.resolve();
+  finalSave.then(()=>signOut(auth)).then(()=>location.reload());
+}
 
 onAuthStateChanged(auth,async u=>{
   if(u){UID=u.uid;g('authScreen').style.display='none';g('loading').style.display='flex';await loadData();}
@@ -935,7 +1025,15 @@ async function loadData(){
     if(cfg.exists()){const c=cfg.val();if(c.epNum)PAY.ep.num=c.epNum;if(c.jcNum)PAY.jc.num=c.jcNum;if(c.tillId)PAY.till.num=c.tillId;if(c.waLink)APP_WA=c.waLink;}
     if(s.exists()){U=s.val();U.activePlans=U.activePlans||[];U.investments=U.investments||[];U.withdraws=U.withdraws||[];U.settings=U.settings||{};U.name=U.name||U.email.split('@')[0];U.totalEarn=U.totalEarn||0;U.teamEarn=U.teamEarn||0;U.balance=U.balance||0;U.upline=U.upline||{};U.teamCount=U.teamCount||0;}
     else{U={email:auth.currentUser.email,name:auth.currentUser.email.split('@')[0],balance:0,totalEarn:0,teamEarn:0,joinDate:Date.now(),referredBy:null,upline:{},teamCount:0,activePlans:[],investments:[],withdraws:[],settings:{}};await saveUser();}
+    // Migrate old plans + accrue offline profit
+    let needSave=false;
+    (U.activePlans||[]).forEach(up=>{
+      if(!up.lastAccrualTime){up.lastAccrualTime=Date.now();needSave=true;}
+    });
+    const accrued=accrueAllPlans();
+    if(accrued>0||needSave){await saveUser();}
     updateHeader();g('loading').style.display='none';g('app').style.display='flex';nav('home');checkDailyBonus();
+    startLiveAccrual();
   }catch(e){showToast("Data load error â€” internet check karein");g('loading').style.display='none';}
 }
 
@@ -943,10 +1041,7 @@ async function saveUser(){await set(ref(db,'users/'+UID),U);updateHeader();}
 function updateHeader(){
   g('hName').innerText=U.name||U.email.split('@')[0];
   const bal=g('hBal');
-  const cur=parseInt((bal.innerText||'').replace(/[^\d]/g,''))||0;
-  const tgt=U.balance||0;
-  if(cur!==tgt && Math.abs(tgt-cur)>0) animateOdometer(bal,cur,tgt,900);
-  else bal.innerText='Rs '+fmt(tgt);
+  if(bal)bal.innerText='Rs '+fmtMoney(U.balance);
 }
 
 function doCopy(text,btnId){
@@ -1041,21 +1136,74 @@ function renderHome(c){
   setTimeout(()=>{startTicker();startBannerSlider();updateCalc(25000);renderLiveTxns();},50);
 }
 
-// ===== WORK =====
+// ===== WORK (LIVE PER-SECOND MINING) =====
 function renderWork(c){
-  if(!U.activePlans.length){c.innerHTML=`<div class="empty-state"><div class="empty-icon"><i class="fas fa-gem" style="font-size:34px;color:var(--text3);"></i></div><h3 style="font-weight:800;font-size:20px;font-family:'Syne',sans-serif;">Koi Active Plan Nahi</h3><p style="color:var(--text3);font-size:14px;max-width:230px;line-height:1.7;">Invest karo aur har roz profit kamao</p><button onclick="nav('invest')" class="btn-gold" style="width:auto;padding:14px 38px;border-radius:50px;margin-top:14px;">Invest Karein âš¡</button></div>`;return;}
-  const now=Date.now();const isLive=up=>!up.expiryDate||up.expiryDate>now;
-  const tk=todayKey();const totalD=U.activePlans.reduce((s,up)=>s+(isLive(up)?(pl(up.id)?.daily||0):0),0);const livePlans=U.activePlans.filter(isLive);const claimed=livePlans.filter(up=>up.lastClaim===tk).length;const allDone=livePlans.length>0&&claimed===livePlans.length;
-  const tasks=U.activePlans.map((up,i)=>{const p=pl(up.id);if(!p)return'';const expired=up.expiryDate&&now>up.expiryDate;const done=up.lastClaim===tk;const pd=up.date&&!isNaN(Number(up.date))?Number(up.date):Date.now();const days=Math.max(1,Math.floor((now-pd)/864e5)+1);const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-now)/864e5)):0;
-    if(expired){return`<div class="task-card" style="border-left-color:var(--red);opacity:0.85;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:12px;background:var(--red-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,77,106,0.25);"><i class="fas ${p.icon}" style="color:var(--red);font-size:16px;"></i></div><div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--red);margin-top:3px;">â³ Expired â€” 2 months pooray ho gaye</p></div></div><span class="bdg b-rej">EXPIRED</span></div><button onclick="buyPlan(${p.id})" style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;box-shadow:0 4px 20px rgba(255,208,96,0.25);">ðŸ”„ DOBARA BUY KAREIN</button></div>`;}
-    return`<div class="task-card ${done?'done':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:12px;background:${done?'var(--green-dim)':'var(--gold-dim)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid ${done?'rgba(0,232,132,0.2)':'rgba(255,208,96,0.15)'};"><i class="fas ${p.icon}" style="color:${done?'var(--green)':'var(--g1)'};font-size:16px;"></i></div><div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--text3);margin-top:3px;">${days} din active â€¢ Rs ${fmt(days*p.daily)} kamaya</p>${up.expiryDate?`<p style="font-size:10px;color:var(--g1);margin-top:3px;font-weight:700;">â³ ${daysLeft} din baqi (2 months mein expire)</p>`:''}</div></div><div style="text-align:right;"><div style="font-size:clamp(14px,4.5vw,20px);font-weight:800;color:var(--green);white-space:nowrap;">+Rs ${fmt(p.daily)}</div><div style="font-size:10px;color:var(--text3);">Today</div></div></div>
-    <button onclick="claimTask(${i})" ${done?'disabled':''} style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:${done?'default':'pointer'};background:${done?'var(--surface3)':'linear-gradient(135deg,var(--g1),var(--g2))'};color:${done?'var(--text3)':'#000'};box-shadow:${done?'none':'0 4px 20px rgba(255,208,96,0.25)'};">${done?'âœ… Aaj Ka Claim Ho Gaya â€” Raat 12 Baje Reset':'ðŸ’° DAILY PROFIT CLAIM KAREIN'}</button>${done?`<div class="plan-cd"><div class="pcd-l">⏳ Next Profit In</div><div class="pcd-v plan-cd-val">${fmtCD(msToMid())}</div></div>`:''}</div>`;
+  if(!U.activePlans.length){c.innerHTML=`<div class="empty-state"><div class="empty-icon"><i class="fas fa-gem" style="font-size:34px;color:var(--text3);"></i></div><h3 style="font-weight:800;font-size:20px;font-family:'Syne',sans-serif;">Koi Active Plan Nahi</h3><p style="color:var(--text3);font-size:14px;max-width:230px;line-height:1.7;">Invest karo aur har second profit kamao</p><button onclick="nav('invest')" class="btn-gold" style="width:auto;padding:14px 38px;border-radius:50px;margin-top:14px;">Invest Karein âš¡</button></div>`;return;}
+  const now=Date.now();
+  const isLive=up=>!up.expiryDate||up.expiryDate>now;
+  const totalD=U.activePlans.reduce((s,up)=>s+(isLive(up)?(pl(up.id)?.daily||0):0),0);
+  const totalPerSec=totalD/86400;
+  const tasks=U.activePlans.map((up,i)=>{
+    const p=pl(up.id);if(!p)return'';
+    const expired=up.expiryDate&&now>up.expiryDate;
+    const startTs=up.date&&!isNaN(Number(up.date))?Number(up.date):now;
+    const days=Math.max(1,Math.floor((now-startTs)/864e5)+1);
+    const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-now)/864e5)):0;
+    const endTime=expired?up.expiryDate:now;
+    const elapsed=Math.max(0,endTime-startTs);
+    const earned=elapsed*((p.daily||0)/86400000);
+    const perSec=(p.daily||0)/86400;
+    if(expired){
+      return`<div class="task-card" style="border-left-color:var(--red);opacity:0.85;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:12px;background:var(--red-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,77,106,0.25);"><i class="fas ${p.icon}" style="color:var(--red);font-size:16px;"></i></div><div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--red);margin-top:3px;">⏳ Expired — 2 months pooray ho gaye</p><p style="font-size:10px;color:var(--text3);margin-top:3px;">Total Earned: Rs ${fmtMoney(earned)}</p></div></div><span class="bdg b-rej">EXPIRED</span></div><button onclick="buyPlan(${p.id})" style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;box-shadow:0 4px 20px rgba(255,208,96,0.25);">🔄 DOBARA BUY KAREIN</button></div>`;
+    }
+    return`<div class="task-card" style="border-left-color:var(--green);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(0,232,132,0.2);">
+            <i class="fas ${p.icon}" style="color:var(--green);font-size:16px;"></i>
+          </div>
+          <div>
+            <p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p>
+            <p style="font-size:11px;color:var(--text3);margin-top:3px;">${days} din active • Rs ${fmt(p.daily)}/din</p>
+            ${up.expiryDate?`<p style="font-size:10px;color:var(--g1);margin-top:3px;font-weight:700;">⏳ ${daysLeft} din baqi</p>`:''}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div id="planEarned${i}" style="font-size:clamp(13px,4vw,17px);font-weight:800;color:var(--green);white-space:nowrap;font-variant-numeric:tabular-nums;">Rs ${fmtMoney(earned)}</div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px;">Total Earned</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(0,232,132,0.08),rgba(0,232,132,0.02));border:1px solid rgba(0,232,132,0.2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.2s ease infinite;"></div>
+          <div>
+            <div style="font-size:9px;font-weight:800;color:var(--green);letter-spacing:2px;text-transform:uppercase;">⚡ LIVE MINING</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px;">Auto add ho raha hai wallet mein</div>
+          </div>
+        </div>
+        <div id="planLive${i}" style="font-size:clamp(12px,3.6vw,15px);font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap;">+Rs ${fmtPerSec(perSec)} / sec</div>
+      </div>
+    </div>`;
   }).join('');
-  c.innerHTML=`<div style="background:linear-gradient(145deg,#041A0D,#040D07,#07070F);border:1px solid rgba(0,232,132,0.2);border-radius:var(--r);padding:22px;margin-bottom:14px;position:relative;overflow:hidden;"><div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,132,0.1) 0%,transparent 65%);pointer-events:none;"></div><div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;">Aaj Ka Total Profit</p><h2 style="font-size:clamp(22px,7vw,36px);font-weight:800;color:var(--green);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;">Rs ${fmt(totalD)}</h2><p style="font-size:11px;color:rgba(0,232,132,0.4);margin-top:6px;">Claimed: ${claimed} / ${U.activePlans.length} plans</p></div><div style="width:64px;height:64px;border-radius:50%;background:rgba(0,232,132,0.1);border:1px solid rgba(0,232,132,0.2);display:flex;align-items:center;justify-content:center;"><i class="fas fa-coins" style="font-size:24px;color:var(--green);"></i></div></div></div>
-  ${allDone?`<div class="countdown-card"><div><p style="font-size:10px;color:#818cf8;text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;">ðŸŒ™ Next Claim Mein</p><div id="cdT" class="cd-val">${fmtCD(msToMid())}</div><p style="font-size:11px;color:rgba(129,140,248,0.4);margin-top:6px;">Midnight reset âœ…</p></div><div style="text-align:right;"><i class="fas fa-moon" style="font-size:32px;color:rgba(129,140,248,0.3);"></i><div style="margin-top:12px;font-size:clamp(14px,4.5vw,20px);font-weight:800;color:rgba(0,232,132,0.7);white-space:nowrap;">Rs ${fmt(totalD)}</div><p style="font-size:10px;color:var(--text3);">Kal milega</p></div></div>`:''}
-  <p class="sec-label">Daily Mining Tasks</p>${tasks}`;
-  if(allDone){cdI=setInterval(()=>{const el=g('cdT');if(!el){clearInterval(cdI);return;}const ms=msToMid();if(ms<=0){clearInterval(cdI);nav('work');}else el.innerText=fmtCD(ms);},1000);}
-  setTimeout(startPlanCountdowns,80);
+  c.innerHTML=`
+  <div style="background:linear-gradient(145deg,#041A0D,#040D07,#07070F);border:1px solid rgba(0,232,132,0.2);border-radius:var(--r);padding:22px;margin-bottom:14px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,132,0.1) 0%,transparent 65%);pointer-events:none;"></div>
+    <div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;">
+      <div style="min-width:0;">
+        <p style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;">⚡ Live Wallet Balance</p>
+        <h2 id="liveWalletBig" style="font-size:clamp(22px,7vw,34px);font-weight:800;color:var(--green);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;font-variant-numeric:tabular-nums;">Rs ${fmtMoney(U.balance)}</h2>
+        <p id="liveTotalPerSec" style="font-size:12px;color:rgba(0,232,132,0.7);margin-top:6px;font-weight:700;font-variant-numeric:tabular-nums;">+Rs ${fmtPerSec(totalPerSec)} / sec</p>
+        <p style="font-size:10px;color:var(--text3);margin-top:3px;">Daily Total: Rs ${fmt(totalD)} • ${U.activePlans.filter(isLive).length} active plans</p>
+      </div>
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(0,232,132,0.1);border:1px solid rgba(0,232,132,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:goldGlow 3s ease infinite;">
+        <i class="fas fa-coins" style="font-size:24px;color:var(--green);"></i>
+      </div>
+    </div>
+  </div>
+  <div style="background:rgba(255,208,96,0.04);border:1px solid rgba(255,208,96,0.15);border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:rgba(255,208,96,0.75);text-align:center;line-height:1.6;">
+    🚀 <b style="color:var(--g1);">No Claim Needed!</b> Aapka profit har second auto wallet mein add ho raha hai
+  </div>
+  <p class="sec-label">Active Mining Plans</p>${tasks}`;
 }
 
 // ===== INVEST =====
@@ -1135,7 +1283,7 @@ function confirmYes(){
   if(U.balance<p.price)return showToast("Balance kam hai!");
   U.balance-=p.price;
   const ts=Date.now();
-  U.activePlans.push({id,lastClaim:"never",date:ts,expiryDate:ts+(PLAN_DAYS*864e5),dateStr:new Date(ts).toLocaleDateString('en-PK')});
+  U.activePlans.push({id,lastAccrualTime:ts,date:ts,expiryDate:ts+(PLAN_DAYS*864e5),dateStr:new Date(ts).toLocaleDateString('en-PK')});
   saveUser();
   // âœ… AUTO COMMISSION â€” turant upline ko milegi jab plan buy ho
   giveCommission(UID, p.price).then(()=>{
@@ -1158,14 +1306,8 @@ function confirmYes(){
 function closePlanBuyOverlay(){g('planBuyOverlay').classList.remove('show');nav('work');}
 
 function claimTask(idx){
-  const up=U.activePlans[idx];if(!up)return;const p=pl(up.id);if(!p)return;
-  if(up.expiryDate&&Date.now()>up.expiryDate)return showToast("â³ Plan expire ho gaya â€” Dobara buy karein");
-  const tk=todayKey();if(up.lastClaim===tk)return showToast("Aaj ka claim ho chuka!");
-  if(navigator.vibrate)navigator.vibrate([40,20,60]);
-  U.balance+=p.daily;U.totalEarn+=p.daily;U.activePlans[idx].lastClaim=tk;playCoinSound();saveUser();
-  g('claimAmt').innerText='+Rs '+fmt(p.daily);
-  g('successOverlay').classList.add('show');
-  setTimeout(()=>launchConfetti('confettiCanvas2',3500),200);
+  // Auto-mining mode: profit har second add ho raha hai, manual claim ki zaroorat nahi
+  showToast("⚡ Profit auto add ho raha hai — claim ki zaroorat nahi!");
 }
 
 function closeClaimPopup(){g('successOverlay').classList.remove('show');nav('work');}
