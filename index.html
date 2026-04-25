@@ -715,7 +715,8 @@ function accrueAllPlans(){
     if(up.expiryDate&&now>up.expiryDate)endTime=up.expiryDate;
     const elapsed=endTime-up.lastAccrualTime;
     if(elapsed<=0)continue;
-    const profit=elapsed*((p.daily||0)/86400000);
+    const dailyRate=(typeof up.effectiveDaily==='number')?up.effectiveDaily:(p.daily||0);
+    const profit=elapsed*(dailyRate/86400000);
     up.lastAccrualTime=endTime;
     total+=profit;
   }
@@ -732,7 +733,8 @@ function totalDailyActive(){
   const now=Date.now();
   return U.activePlans.reduce((s,up)=>{
     if(up.expiryDate&&now>up.expiryDate)return s;
-    return s+(pl(up.id)?.daily||0);
+    const d=(typeof up.effectiveDaily==='number')?up.effectiveDaily:(pl(up.id)?.daily||0);
+    return s+d;
   },0);
 }
 
@@ -752,9 +754,10 @@ function updateLiveUI(){
       let endTime=now;
       if(up.expiryDate&&now>up.expiryDate)endTime=up.expiryDate;
       const elapsed=Math.max(0,endTime-startTs);
-      const earned=elapsed*((p.daily||0)/86400000);
+      const dailyRate=(typeof up.effectiveDaily==='number')?up.effectiveDaily:(p.daily||0);
+      const earned=elapsed*(dailyRate/86400000);
       const eEl=g('planEarned'+i);if(eEl)eEl.innerText='Rs '+fmtMoney(earned);
-      const lEl=g('planLive'+i);if(lEl)lEl.innerText='+Rs '+fmtPerSec((p.daily||0)/86400)+' / sec';
+      const lEl=g('planLive'+i);if(lEl)lEl.innerText='+Rs '+fmtPerSec(dailyRate/86400)+' / sec';
     });
   }
 }
@@ -785,6 +788,7 @@ window.addEventListener('beforeunload',()=>{
 
 // ===== ENHANCEMENT HELPERS =====
 const WITHDRAW_FEE = 0.10;        // 10% withdrawal fee
+const PLAN_TAX = 0.05;            // 5% plan activation tax
 const MIN_DEPOSIT = 600;
 const MIN_WITHDRAW = 500;
 const PLAN_TAGS = {2:{cls:'hot',txt:'🔥 Hot'},5:{cls:'popular',txt:'⭐ Most Popular'},7:{cls:'best',txt:'💎 Best Seller'}};
@@ -1151,8 +1155,9 @@ function renderWork(c){
     const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-now)/864e5)):0;
     const endTime=expired?up.expiryDate:now;
     const elapsed=Math.max(0,endTime-startTs);
-    const earned=elapsed*((p.daily||0)/86400000);
-    const perSec=(p.daily||0)/86400;
+    const dailyRate=(typeof up.effectiveDaily==='number')?up.effectiveDaily:(p.daily||0);
+    const earned=elapsed*(dailyRate/86400000);
+    const perSec=dailyRate/86400;
     if(expired){
       return`<div class="task-card" style="border-left-color:var(--red);opacity:0.85;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:12px;background:var(--red-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,77,106,0.25);"><i class="fas ${p.icon}" style="color:var(--red);font-size:16px;"></i></div><div><p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p><p style="font-size:11px;color:var(--red);margin-top:3px;">⏳ Expired — 2 months pooray ho gaye</p><p style="font-size:10px;color:var(--text3);margin-top:3px;">Total Earned: Rs ${fmtMoney(earned)}</p></div></div><span class="bdg b-rej">EXPIRED</span></div><button onclick="buyPlan(${p.id})" style="width:100%;padding:14px;border-radius:var(--r-sm);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;box-shadow:0 4px 20px rgba(255,208,96,0.25);">🔄 DOBARA BUY KAREIN</button></div>`;
     }
@@ -1164,7 +1169,7 @@ function renderWork(c){
           </div>
           <div>
             <p style="font-weight:800;font-size:15px;line-height:1.2;">${p.name}</p>
-            <p style="font-size:11px;color:var(--text3);margin-top:3px;">${days} din active • Rs ${fmt(p.daily)}/din</p>
+            <p style="font-size:11px;color:var(--text3);margin-top:3px;">${days} din active • Rs ${fmt(dailyRate)}/din</p>
             ${up.expiryDate?`<p style="font-size:10px;color:var(--g1);margin-top:3px;font-weight:700;">⏳ ${daysLeft} din baqi</p>`:''}
           </div>
         </div>
@@ -1232,8 +1237,8 @@ function renderTeam(c){
 
 // ===== ME =====
 function renderMe(c){
-  const tI=(U.activePlans||[]).reduce((s,up)=>s+(pl(up.id)?.price||0),0);const aW=(U.withdraws||[]).filter(w=>w.status==='Approved').reduce((s,w)=>s+w.amount,0);const pI=(U.investments||[]).filter(d=>d.status==='Pending').reduce((s,d)=>s+d.amount,0);const tD=(U.activePlans||[]).reduce((s,up)=>s+(pl(up.id)?.daily||0),0);const dJ=Math.max(1,Math.floor((Date.now()-(U.joinDate&&!isNaN(Number(U.joinDate))?Number(U.joinDate):Date.now()))/864e5));
-  const pL=(U.activePlans||[]).length?(U.activePlans||[]).map(up=>{const p=pl(up.id);if(!p)return'';const d=Math.max(1,Math.floor((Date.now()-(up.date&&!isNaN(Number(up.date))?Number(up.date):Date.now()))/864e5)+1);const exp=up.expiryDate&&Date.now()>up.expiryDate;const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-Date.now())/864e5)):0;return`<div class="card" style="padding:18px;margin-bottom:9px;${exp?'opacity:0.7;':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:40px;height:40px;border-radius:11px;background:${exp?'var(--red-dim)':'var(--gold-dim)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas ${p.icon}" style="color:${exp?'var(--red)':'var(--g1)'};font-size:15px;"></i></div><div><p style="font-weight:800;font-size:15px;">${p.name}</p><p style="font-size:10px;color:var(--text3);margin-top:2px;">2.5% daily â€¢ 2 Months${up.expiryDate?(exp?` â€¢ <span style="color:var(--red);font-weight:700;">EXPIRED</span>`:` â€¢ <span style="color:var(--g1);font-weight:700;">${daysLeft} din baqi</span>`):''}</p></div></div><span style="background:${exp?'var(--red-dim)':'var(--green-dim)'};color:${exp?'var(--red)':'var(--green)'};font-size:10px;font-weight:700;padding:4px 12px;border-radius:50px;border:1px solid ${exp?'rgba(255,77,106,0.25)':'rgba(0,232,132,0.2)'};">${exp?'EXPIRED':'RUNNING'}</span></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;"><div class="chip"><div class="chip-l">Invest</div><div class="chip-v" style="color:var(--blue);font-size:11px;">Rs ${fmt(p.price)}</div></div><div class="chip"><div class="chip-l">Daily</div><div class="chip-v" style="color:var(--green);font-size:11px;">Rs ${fmt(p.daily)}</div></div><div class="chip"><div class="chip-l">Days</div><div class="chip-v" style="color:var(--g1);font-size:11px;">${d}</div></div><div class="chip"><div class="chip-l">Earned</div><div class="chip-v" style="color:var(--purple);font-size:11px;">Rs ${fmt(d*p.daily)}</div></div></div></div>`;}).join(''):`<div style="background:var(--surface2);border-radius:var(--r-sm);padding:20px;text-align:center;border:1px solid var(--border);"><p style="font-size:13px;color:var(--text3);">Koi active plan nahi â€” <span onclick="nav('invest')" style="color:var(--g1);cursor:pointer;font-weight:700;">Invest karein âš¡</span></p></div>`;
+  const tI=(U.activePlans||[]).reduce((s,up)=>s+(pl(up.id)?.price||0),0);const aW=(U.withdraws||[]).filter(w=>w.status==='Approved').reduce((s,w)=>s+w.amount,0);const pI=(U.investments||[]).filter(d=>d.status==='Pending').reduce((s,d)=>s+d.amount,0);const tD=(U.activePlans||[]).reduce((s,up)=>{const dr=(typeof up.effectiveDaily==='number')?up.effectiveDaily:(pl(up.id)?.daily||0);return s+dr;},0);const dJ=Math.max(1,Math.floor((Date.now()-(U.joinDate&&!isNaN(Number(U.joinDate))?Number(U.joinDate):Date.now()))/864e5));
+  const pL=(U.activePlans||[]).length?(U.activePlans||[]).map(up=>{const p=pl(up.id);if(!p)return'';const d=Math.max(1,Math.floor((Date.now()-(up.date&&!isNaN(Number(up.date))?Number(up.date):Date.now()))/864e5)+1);const exp=up.expiryDate&&Date.now()>up.expiryDate;const daysLeft=up.expiryDate?Math.max(0,Math.ceil((up.expiryDate-Date.now())/864e5)):0;const dRate=(typeof up.effectiveDaily==='number')?up.effectiveDaily:p.daily;const ePr=(typeof up.effectivePrice==='number')?up.effectivePrice:p.price;return`<div class="card" style="padding:18px;margin-bottom:9px;${exp?'opacity:0.7;':''}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:40px;height:40px;border-radius:11px;background:${exp?'var(--red-dim)':'var(--gold-dim)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas ${p.icon}" style="color:${exp?'var(--red)':'var(--g1)'};font-size:15px;"></i></div><div><p style="font-weight:800;font-size:15px;">${p.name}</p><p style="font-size:10px;color:var(--text3);margin-top:2px;">2.5% daily â€¢ 2 Months${up.expiryDate?(exp?` â€¢ <span style="color:var(--red);font-weight:700;">EXPIRED</span>`:` â€¢ <span style="color:var(--g1);font-weight:700;">${daysLeft} din baqi</span>`):''}</p></div></div><span style="background:${exp?'var(--red-dim)':'var(--green-dim)'};color:${exp?'var(--red)':'var(--green)'};font-size:10px;font-weight:700;padding:4px 12px;border-radius:50px;border:1px solid ${exp?'rgba(255,77,106,0.25)':'rgba(0,232,132,0.2)'};">${exp?'EXPIRED':'RUNNING'}</span></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;"><div class="chip"><div class="chip-l">Active</div><div class="chip-v" style="color:var(--blue);font-size:11px;">Rs ${fmt(ePr)}</div></div><div class="chip"><div class="chip-l">Daily</div><div class="chip-v" style="color:var(--green);font-size:11px;">Rs ${fmt(dRate)}</div></div><div class="chip"><div class="chip-l">Days</div><div class="chip-v" style="color:var(--g1);font-size:11px;">${d}</div></div><div class="chip"><div class="chip-l">Earned</div><div class="chip-v" style="color:var(--purple);font-size:11px;">Rs ${fmt(d*dRate)}</div></div></div></div>`;}).join(''):`<div style="background:var(--surface2);border-radius:var(--r-sm);padding:20px;text-align:center;border:1px solid var(--border);"><p style="font-size:13px;color:var(--text3);">Koi active plan nahi â€” <span onclick="nav('invest')" style="color:var(--g1);cursor:pointer;font-weight:700;">Invest karein âš¡</span></p></div>`;
   const wH=[...(U.withdraws||[])].reverse().slice(0,6).map(w=>`<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:7px;"><div><p style="font-weight:800;font-size:16px;margin-bottom:3px;">Rs ${fmt(w.amount)}</p><p style="font-size:11px;color:var(--text3);">${w.method} â€¢ ${w.num}</p><p style="font-size:10px;color:var(--text3);margin-top:2px;">${w.date}</p></div><span class="bdg ${w.status==='Approved'?'b-appr':w.status==='Rejected'?'b-rej':'b-pend'}">${w.status}</span></div>`).join('')||`<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px;">Koi history nahi</div>`;
   const stats=[{icon:'fa-wallet',label:'Wallet',val:'Rs '+fmt(U.balance),col:'var(--g1)'},{icon:'fa-chart-line',label:'Total Earned',val:'Rs '+fmt(U.totalEarn),col:'var(--green)'},{icon:'fa-piggy-bank',label:'Invested',val:'Rs '+fmt(tI),col:'var(--blue)'},{icon:'fa-arrow-up',label:'Withdrawn',val:'Rs '+fmt(aW),col:'var(--red)'},{icon:'fa-gem',label:'Active Plans',val:String((U.activePlans||[]).length),col:'var(--purple)'},{icon:'fa-coins',label:'Daily Profit',val:'Rs '+fmt(tD),col:'#F59E0B'},{icon:'fa-users',label:'Team Earned',val:'Rs '+fmt(U.teamEarn),col:'var(--cyan)'},{icon:'fa-hourglass-half',label:'Pending',val:'Rs '+fmt(pI),col:'#84cc16'}].map(s=>`<div class="stat-box"><i class="fas ${s.icon}" style="color:${s.col};font-size:14px;margin-bottom:9px;display:block;opacity:0.85;"></i><div class="stat-box-label">${s.label}</div><div class="stat-box-val" style="color:${s.col};font-size:18px;overflow:hidden;">${s.val}</div></div>`).join('');
   c.innerHTML=`<div class="profile-card"><div class="profile-av"><i class="fas fa-user-astronaut" style="font-size:30px;color:#000;"></i></div><div><h2 style="font-weight:800;font-size:17px;line-height:1.2;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0;">${U.name||U.email.split('@')[0]}</h2><p style="font-size:12px;color:var(--text2);margin-top:5px;">${U.email}</p><p style="font-size:12px;color:var(--g1);margin-top:8px;font-weight:700;"><i class="fas fa-calendar-check" style="margin-right:6px;"></i>Member ${dJ} din se</p></div></div>
@@ -1260,16 +1265,19 @@ function buyPlan(id){
   const p=pl(id);if(!p)return;
   if(U.activePlans.some(x=>x.id===id))return showToast("âœ… Yeh plan pehle se active hai!");
   if(U.balance<p.price){showToast("ðŸ’° Balance kam hai! Pehle invest karein.");setTimeout(()=>nav('invest'),1200);return;}
-  // Fill custom modal
+  // Fill custom modal — TAX adjusted
   pendingBuyId=id;
+  const tax=Math.round(p.price*PLAN_TAX);
+  const effPrice=p.price-tax;
+  const effDaily=Math.round(p.daily*(1-PLAN_TAX));
   g('cmIcon').className='fas '+p.icon;
   g('cmPlanName').innerText=p.name;
   g('cmInvest').innerText='Rs '+fmt(p.price);
-  g('cmDaily').innerText='Rs '+fmt(p.daily);
-  g('cmWeekly').innerText='Rs '+fmt(p.daily*7);
-  g('cmMonthly').innerText='Rs '+fmt(p.daily*30);
-  g('cmProfitVal').innerText='+Rs '+fmt(p.daily)+' / Din';
-  g('cmNote').innerText='Rs '+fmt(p.price);
+  g('cmDaily').innerText='Rs '+fmt(effDaily);
+  g('cmWeekly').innerText='Rs '+fmt(effDaily*7);
+  g('cmMonthly').innerText='Rs '+fmt(effDaily*30);
+  g('cmProfitVal').innerText='+Rs '+fmt(effDaily)+' / Din';
+  g('cmNote').innerHTML='💸 <b style="color:var(--red);">Tax (5%): Rs '+fmt(tax)+'</b> katega<br>⚡ <b style="color:var(--g1);">Effective Plan: Rs '+fmt(effPrice)+'</b> activate hoga<br>📅 <b style="color:var(--green);">Daily Profit: Rs '+fmt(effDaily)+'</b> (2.5% of Rs '+fmt(effPrice)+')<br>💰 Total Rs '+fmt(p.price)+' balance se katega • 2 Months Validity';
   g('confirmModal').classList.add('open');
   if(navigator.vibrate)navigator.vibrate(30);
 }
@@ -1281,22 +1289,29 @@ function confirmYes(){
   g('confirmModal').classList.remove('open');
   const p=pl(id);if(!p)return;
   if(U.balance<p.price)return showToast("Balance kam hai!");
+  // ===== TAX CALCULATION =====
+  const tax=Math.round(p.price*PLAN_TAX);
+  const effectivePrice=p.price-tax;
+  const effectiveDaily=Math.round(p.daily*(1-PLAN_TAX));
   U.balance-=p.price;
+  // Track total tax paid (for stats)
+  U.totalTaxPaid=(U.totalTaxPaid||0)+tax;
   const ts=Date.now();
-  U.activePlans.push({id,lastAccrualTime:ts,date:ts,expiryDate:ts+(PLAN_DAYS*864e5),dateStr:new Date(ts).toLocaleDateString('en-PK')});
+  U.activePlans.push({id,lastAccrualTime:ts,date:ts,expiryDate:ts+(PLAN_DAYS*864e5),dateStr:new Date(ts).toLocaleDateString('en-PK'),tax,effectivePrice,effectiveDaily});
   saveUser();
-  // âœ… AUTO COMMISSION â€” turant upline ko milegi jab plan buy ho
+  // âœ… AUTO COMMISSION â€” turant upline ko milegi jab plan buy ho (full price ke base par)
   giveCommission(UID, p.price).then(()=>{
     console.log("Commission dedi gayi!");
   }).catch(e=>console.log("Commission error:",e));
   if(navigator.vibrate)navigator.vibrate([50,30,80,30,120]);
-  // Fill success overlay
+  showToast("✅ Plan activated! Tax Rs "+fmt(tax)+" kata • Daily Rs "+fmt(effectiveDaily));
+  // Fill success overlay (effective figures)
   g('pboPlanTitle').innerText=p.name;
-  g('pboPlanSub').innerText='Rs '+fmt(p.price)+' invested â€¢ 2 Months Active ðŸ”¥';
-  g('pboProfitAmt').innerText='+Rs '+fmt(p.daily);
-  g('pboWeekly').innerText='Rs '+fmt(p.daily*7);
-  g('pboMonthly').innerText='Rs '+fmt(p.daily*30);
-  g('pboYearly').innerText='Rs '+fmt(p.daily*365);
+  g('pboPlanSub').innerText='Rs '+fmt(effectivePrice)+' active (Tax Rs '+fmt(tax)+') • 2 Months 🔥';
+  g('pboProfitAmt').innerText='+Rs '+fmt(effectiveDaily);
+  g('pboWeekly').innerText='Rs '+fmt(effectiveDaily*7);
+  g('pboMonthly').innerText='Rs '+fmt(effectiveDaily*30);
+  g('pboYearly').innerText='Rs '+fmt(effectiveDaily*365);
   const rd=document.querySelector('.pbo-rings');if(rd){const cl=rd.cloneNode(true);rd.parentNode.replaceChild(cl,rd);}
   g('planBuyOverlay').classList.add('show');
   setTimeout(()=>launchParticles(),100);
@@ -1342,3 +1357,4 @@ window.giveCommission=giveCommission;
 </script>
 </body>
 </html>
+
